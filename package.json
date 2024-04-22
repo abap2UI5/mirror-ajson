@@ -12,14 +12,14 @@
     },
     "repository": {
       "type": "git",
-      "url": "git+https://github.com/abapGit/ajson_mirror.git"
+      "url": "git+https://github.com/abap2UI5/ajson_mirror.git"
     },
     "author": "",
     "license": "MIT",
     "bugs": {
-      "url": "https://github.com/abapGit/ajson_mirror/issues"
+      "url": "https://github.com/abap2UI5/ajson_mirror/issues"
     },
-    "homepage": "https://github.com/abapGit/ajson_mirror#readme",
+    "homepage": "https://github.com/abap2UI5/ajson_mirror#readme",
     "dependencies": {
       "@abaplint/cli": "^2.106.9"
     }
