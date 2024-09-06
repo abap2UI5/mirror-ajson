@@ -11,8 +11,6 @@
     ],
     "syntax": {
       "version": "v750",
-      "errorNamespace": "."
-    },
     "rules": {
       "downport": true,
       "begin_end_names": true,
