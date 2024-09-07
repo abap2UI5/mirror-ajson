@@ -18,7 +18,7 @@ jobs:
         node-version: '16'
     - name: run
       run: |
-        npm i
+        npm ci
         npm run mirror
         git status
     - name: Open PR
