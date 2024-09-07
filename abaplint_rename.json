@@ -16,7 +16,7 @@
   ],
   "rename": {
     "output": "output",
-    "patterns": [{"type": "CLAS|INTF", "oldName": "z(.*)_ajson", "newName": "z$1_a2ui5_ajson"}]
+    "patterns": [{"type": "CLAS|INTF", "oldName": "z(.*)_ajson", "newName": "z2ui5_$1_ajson"}]
   },
   "syntax": {
     "version": "v702",
