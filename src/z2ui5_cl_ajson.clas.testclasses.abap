@@ -4,14 +4,14 @@
 CLASS lcl_nodes_helper DEFINITION FINAL.
   PUBLIC SECTION.
 
-    DATA mt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA mt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     METHODS add
       IMPORTING
         iv_str TYPE string.
     METHODS clear.
     METHODS sorted
       RETURNING
-        VALUE(rt_nodes) TYPE zif_a2ui5_ajson_types=>ty_nodes_ts.
+        VALUE(rt_nodes) TYPE z2ui5_if_ajson_types=>ty_nodes_ts.
 
 ENDCLASS.
 
@@ -74,19 +74,19 @@ CLASS ltcl_parser_test DEFINITION FINAL
     DATA mo_nodes TYPE REF TO lcl_nodes_helper.
 
     METHODS setup.
-    METHODS parse FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_keeping_order FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_string FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_number FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_float FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_boolean FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_false FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_null FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_date FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_bare_values FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS parse_error FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS duplicate_key FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS non_json FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS parse FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_keeping_order FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_string FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_number FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_float FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_boolean FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_false FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_null FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_date FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_bare_values FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS parse_error FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS duplicate_key FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS non_json FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -99,7 +99,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
 
   METHOD parse_bare_values.
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     mo_nodes->add( ' | |str |abc | |0' ).
     lt_act = mo_cut->parse( '"abc"' ).
@@ -139,12 +139,12 @@ CLASS ltcl_parser_test IMPLEMENTATION.
 
   METHOD parse_error.
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
-    DATA lx_err TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
+    DATA lx_err TYPE REF TO z2ui5_cx_ajson_error.
     TRY.
         lt_act = mo_cut->parse( 'abc' ).
         cl_abap_unit_assert=>fail( 'Parsing of string w/o quotes must fail (spec)' ).
-      CATCH zcx_a2ui5_ajson_error INTO lx_err.
+      CATCH z2ui5_cx_ajson_error INTO lx_err.
         cl_abap_unit_assert=>assert_char_cp(
         act = lx_err->get_text( )
         exp = '*parsing error*' ).
@@ -159,7 +159,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
         && '"error"' && cl_abap_char_utilities=>newline
         && '}' ).
         cl_abap_unit_assert=>fail( 'Parsing of invalid JSON must fail (spec)' ).
-      CATCH zcx_a2ui5_ajson_error INTO lx_err.
+      CATCH z2ui5_cx_ajson_error INTO lx_err.
         cl_abap_unit_assert=>assert_char_cp(
         act = lx_err->get_text( )
         exp = '*parsing error*' ).
@@ -174,7 +174,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
     mo_nodes->add( '                 |         |object |                        |  |1' ).
     mo_nodes->add( '/                |string   |str    |abc                     |  |0' ).
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     lt_act = mo_cut->parse( '{"string": "abc"}' ).
     cl_abap_unit_assert=>assert_equals(
       act = lt_act
@@ -185,7 +185,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
     mo_nodes->add( '                 |         |object |                        |  |1' ).
     mo_nodes->add( '/                |number   |num    |123                     |  |0' ).
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     lt_act = mo_cut->parse( '{"number": 123}' ).
     cl_abap_unit_assert=>assert_equals(
       act = lt_act
@@ -196,7 +196,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
     mo_nodes->add( '                 |         |object |                        |  |1' ).
     mo_nodes->add( '/                |float    |num    |123.45                  |  |0' ).
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     CREATE OBJECT mo_cut.
     lt_act = mo_cut->parse( '{"float": 123.45}' ).
     cl_abap_unit_assert=>assert_equals(
@@ -208,7 +208,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
     mo_nodes->add( '                 |         |object |                        |  |1' ).
     mo_nodes->add( '/                |boolean  |bool   |true                    |  |0' ).
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     lt_act = mo_cut->parse( '{"boolean": true}' ).
     cl_abap_unit_assert=>assert_equals(
       act = lt_act
@@ -219,7 +219,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
     mo_nodes->add( '                 |         |object |                        |  |1' ).
     mo_nodes->add( '/                |false    |bool   |false                   |  |0' ).
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     lt_act = mo_cut->parse( '{"false": false}' ).
     cl_abap_unit_assert=>assert_equals(
       act = lt_act
@@ -230,7 +230,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
     mo_nodes->add( '                 |         |object |                        |  |1' ).
     mo_nodes->add( '/                |null     |null   |                        |  |0' ).
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     lt_act = mo_cut->parse( '{"null": null}' ).
     cl_abap_unit_assert=>assert_equals(
       act = lt_act
@@ -241,7 +241,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
     mo_nodes->add( '                 |         |object |                        |  |1' ).
     mo_nodes->add( '/                |date     |str    |2020-03-15              |  |0' ).
 
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     lt_act = mo_cut->parse( '{"date": "2020-03-15"}' ).
     cl_abap_unit_assert=>assert_equals(
       act = lt_act
@@ -296,7 +296,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
   METHOD parse.
 
     DATA lo_cut TYPE REF TO lcl_json_parser.
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
 
     CREATE OBJECT lo_nodes.
@@ -351,7 +351,7 @@ CLASS ltcl_parser_test IMPLEMENTATION.
   METHOD parse_keeping_order.
 
     DATA lo_cut TYPE REF TO lcl_json_parser.
-    DATA lt_act TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_act TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
 
     CREATE OBJECT lo_nodes.
@@ -412,13 +412,13 @@ CLASS ltcl_parser_test IMPLEMENTATION.
   METHOD duplicate_key.
 
     DATA lo_cut TYPE REF TO lcl_json_parser.
-    DATA lx TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lx TYPE REF TO z2ui5_cx_ajson_error.
 
     TRY.
         CREATE OBJECT lo_cut.
         lo_cut->parse( '{ "a" = 1, "a" = 1 }' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_not_initial( lx ).
     ENDTRY.
 
@@ -427,13 +427,13 @@ CLASS ltcl_parser_test IMPLEMENTATION.
   METHOD non_json.
 
     DATA lo_cut TYPE REF TO lcl_json_parser.
-    DATA lx TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lx TYPE REF TO z2ui5_cx_ajson_error.
 
     TRY.
         CREATE OBJECT lo_cut.
         lo_cut->parse( '<html><head><title>X</title></head><body><h1>Y</h1></body></html>' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_not_initial( lx ).
     ENDTRY.
 
@@ -457,18 +457,18 @@ CLASS ltcl_serializer_test DEFINITION FINAL
         VALUE(rv_json) TYPE string.
     CLASS-METHODS sample_nodes
       RETURNING
-        VALUE(rt_nodes) TYPE zif_a2ui5_ajson_types=>ty_nodes_ts.
+        VALUE(rt_nodes) TYPE z2ui5_if_ajson_types=>ty_nodes_ts.
 
   PRIVATE SECTION.
 
-    METHODS stringify_condensed FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS stringify_indented FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS array_index FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS item_order FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS simple_indented FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS empty_set FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS escape_string FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS empty FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS stringify_condensed FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS stringify_indented FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS array_index FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS item_order FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS simple_indented FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS empty_set FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS escape_string FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS empty FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -798,12 +798,12 @@ CLASS ltcl_utils_test DEFINITION FINAL
 
     METHODS normalize_path FOR TESTING.
     METHODS split_path FOR TESTING.
-    METHODS validate_array_index FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS validate_array_index FOR TESTING RAISING z2ui5_cx_ajson_error.
     METHODS string_to_xstring_utf8 FOR TESTING.
 
 ENDCLASS.
 
-CLASS zcl_a2ui5_ajson DEFINITION LOCAL FRIENDS ltcl_utils_test.
+CLASS z2ui5_cl_ajson DEFINITION LOCAL FRIENDS ltcl_utils_test.
 
 CLASS ltcl_utils_test IMPLEMENTATION.
 
@@ -825,14 +825,14 @@ CLASS ltcl_utils_test IMPLEMENTATION.
         lcl_utils=>validate_array_index( iv_path = 'x'
                                          iv_index = 'a' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
     TRY.
         lcl_utils=>validate_array_index( iv_path = 'x'
                                          iv_index = '0' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
   ENDMETHOD.
@@ -862,7 +862,7 @@ CLASS ltcl_utils_test IMPLEMENTATION.
 
   METHOD split_path.
 
-    DATA ls_exp TYPE zif_a2ui5_ajson_types=>ty_path_name.
+    DATA ls_exp TYPE z2ui5_if_ajson_types=>ty_path_name.
     DATA lv_path TYPE string.
 
     lv_path     = ''. " alias to root
@@ -936,28 +936,28 @@ CLASS ltcl_reader_test DEFINITION FINAL
 
   PRIVATE SECTION.
 
-    METHODS get_value FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS get_node_type FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS exists FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS value_integer FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS value_number FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS value_boolean FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS value_string FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS members FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS slice FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS array_to_string_table FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS get_date FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS get_timestamp FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS get_value FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS get_node_type FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS exists FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS value_integer FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS value_number FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS value_boolean FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS value_string FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS members FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS slice FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS array_to_string_table FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS get_date FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS get_timestamp FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
-CLASS zcl_a2ui5_ajson DEFINITION LOCAL FRIENDS ltcl_reader_test.
+CLASS z2ui5_cl_ajson DEFINITION LOCAL FRIENDS ltcl_reader_test.
 
 CLASS ltcl_reader_test IMPLEMENTATION.
 
   METHOD slice.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
 
     CREATE OBJECT lo_nodes.
@@ -984,8 +984,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_nodes->add( '/2/       |filename |str    |./zxxx.prog.abap        |  |0' ).
 
 
-    lo_cut = zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
-    lo_cut ?= lo_cut->zif_a2ui5_ajson~slice( '/issues' ).
+    lo_cut = z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    lo_cut ?= lo_cut->z2ui5_if_ajson~slice( '/issues' ).
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->mt_json_tree
       exp = lo_nodes->sorted( ) ).
@@ -1023,8 +1023,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_nodes->add( '/issues/2/end/   |col      |num    |22                      |  |0' ).
     lo_nodes->add( '/issues/2/       |filename |str    |./zxxx.prog.abap        |  |0' ).
 
-    lo_cut = zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
-    lo_cut ?= lo_cut->zif_a2ui5_ajson~slice( '/' ).
+    lo_cut = z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    lo_cut ?= lo_cut->z2ui5_if_ajson~slice( '/' ).
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->mt_json_tree
       exp = lo_nodes->sorted( ) ).
@@ -1036,8 +1036,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_nodes->add( '/ |row      |num    |3                       | |0' ).
     lo_nodes->add( '/ |col      |num    |21                      | |0' ).
 
-    lo_cut = zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
-    lo_cut ?= lo_cut->zif_a2ui5_ajson~slice( '/issues/2/start/' ).
+    lo_cut = z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    lo_cut ?= lo_cut->z2ui5_if_ajson~slice( '/issues/2/start/' ).
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->mt_json_tree
       exp = lo_nodes->sorted( ) ).
@@ -1046,8 +1046,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
 
   METHOD get_value.
 
-    DATA lo_cut TYPE REF TO zif_a2ui5_ajson.
-    lo_cut ?= zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    DATA lo_cut TYPE REF TO z2ui5_if_ajson.
+    lo_cut ?= z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get( '/string' )
@@ -1069,42 +1069,42 @@ CLASS ltcl_reader_test IMPLEMENTATION.
 
   METHOD get_node_type.
 
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
-    li_cut = zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
+    li_cut = z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/' )
-      exp = zif_a2ui5_ajson_types=>node_type-object ).
+      exp = z2ui5_if_ajson_types=>node_type-object ).
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/string' )
-      exp = zif_a2ui5_ajson_types=>node_type-string ).
+      exp = z2ui5_if_ajson_types=>node_type-string ).
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/number' )
-      exp = zif_a2ui5_ajson_types=>node_type-number ).
+      exp = z2ui5_if_ajson_types=>node_type-number ).
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/float' )
-      exp = zif_a2ui5_ajson_types=>node_type-number ).
+      exp = z2ui5_if_ajson_types=>node_type-number ).
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/boolean' )
-      exp = zif_a2ui5_ajson_types=>node_type-boolean ).
+      exp = z2ui5_if_ajson_types=>node_type-boolean ).
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/false' )
-      exp = zif_a2ui5_ajson_types=>node_type-boolean ).
+      exp = z2ui5_if_ajson_types=>node_type-boolean ).
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/null' )
-      exp = zif_a2ui5_ajson_types=>node_type-null ).
+      exp = z2ui5_if_ajson_types=>node_type-null ).
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/date' )
-      exp = zif_a2ui5_ajson_types=>node_type-string ).
+      exp = z2ui5_if_ajson_types=>node_type-string ).
     cl_abap_unit_assert=>assert_equals(
       act = li_cut->get_node_type( '/issues' )
-      exp = zif_a2ui5_ajson_types=>node_type-array ).
+      exp = z2ui5_if_ajson_types=>node_type-array ).
 
   ENDMETHOD.
 
   METHOD get_date.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
     DATA lv_exp TYPE d.
 
@@ -1117,7 +1117,7 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_cut->mt_json_tree = lo_nodes->mt_nodes.
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->zif_a2ui5_ajson~get_date( '/date1' )
+      act = lo_cut->z2ui5_if_ajson~get_date( '/date1' )
       exp = lv_exp ).
 
     CREATE OBJECT lo_nodes.
@@ -1126,7 +1126,7 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_cut->mt_json_tree = lo_nodes->mt_nodes.
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->zif_a2ui5_ajson~get_date( '/date1' )
+      act = lo_cut->z2ui5_if_ajson~get_date( '/date1' )
       exp = lv_exp ).
 
     CREATE OBJECT lo_nodes.
@@ -1135,14 +1135,14 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_cut->mt_json_tree = lo_nodes->mt_nodes.
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->zif_a2ui5_ajson~get_date( '/date1' )
+      act = lo_cut->z2ui5_if_ajson~get_date( '/date1' )
       exp = '' ).
 
   ENDMETHOD.
 
   METHOD get_timestamp.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
     DATA lv_exp TYPE timestamp VALUE `20200728000000`.
 
@@ -1154,15 +1154,15 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_cut->mt_json_tree = lo_nodes->mt_nodes.
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->zif_a2ui5_ajson~get_timestamp( '/timestamp' )
+      act = lo_cut->z2ui5_if_ajson~get_timestamp( '/timestamp' )
       exp = lv_exp ).
 
   ENDMETHOD.
 
   METHOD exists.
 
-    DATA lo_cut TYPE REF TO zif_a2ui5_ajson.
-    lo_cut ?= zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    DATA lo_cut TYPE REF TO z2ui5_if_ajson.
+    lo_cut ?= z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
 
     cl_abap_unit_assert=>assert_equals(
@@ -1185,8 +1185,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
 
   METHOD value_integer.
 
-    DATA lo_cut TYPE REF TO zif_a2ui5_ajson.
-    lo_cut ?= zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    DATA lo_cut TYPE REF TO z2ui5_if_ajson.
+    lo_cut ?= z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get_integer( '/string' )
@@ -1204,8 +1204,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
 
   METHOD value_number.
 
-    DATA lo_cut TYPE REF TO zif_a2ui5_ajson.
-    lo_cut ?= zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    DATA lo_cut TYPE REF TO z2ui5_if_ajson.
+    lo_cut ?= z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get_number( '/string' )
@@ -1223,8 +1223,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
 
   METHOD value_boolean.
 
-    DATA lo_cut TYPE REF TO zif_a2ui5_ajson.
-    lo_cut ?= zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    DATA lo_cut TYPE REF TO z2ui5_if_ajson.
+    lo_cut ?= z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get_boolean( '/string' )
@@ -1246,8 +1246,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
 
   METHOD value_string.
 
-    DATA lo_cut TYPE REF TO zif_a2ui5_ajson.
-    lo_cut ?= zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    DATA lo_cut TYPE REF TO z2ui5_if_ajson.
+    lo_cut ?= z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get_string( '/string' )
@@ -1270,8 +1270,8 @@ CLASS ltcl_reader_test IMPLEMENTATION.
   METHOD members.
 
     DATA lt_exp TYPE string_table.
-    DATA lo_cut TYPE REF TO zif_a2ui5_ajson.
-    lo_cut ?= zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    DATA lo_cut TYPE REF TO z2ui5_if_ajson.
+    lo_cut ?= z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
     CLEAR lt_exp.
     APPEND '1' TO lt_exp.
@@ -1291,7 +1291,7 @@ CLASS ltcl_reader_test IMPLEMENTATION.
 
   METHOD array_to_string_table.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
     DATA lt_act TYPE string_table.
     DATA lt_exp TYPE string_table.
@@ -1315,13 +1315,13 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     CREATE OBJECT lo_cut.
     lo_cut->mt_json_tree = lo_nodes->mt_nodes.
 
-    lt_act = lo_cut->zif_a2ui5_ajson~array_to_string_table( '/' ).
+    lt_act = lo_cut->z2ui5_if_ajson~array_to_string_table( '/' ).
     cl_abap_unit_assert=>assert_equals(
       act = lt_act
       exp = lt_exp ).
 
     " negative
-    DATA lx TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lx TYPE REF TO z2ui5_cx_ajson_error.
 
     CREATE OBJECT lo_nodes.
     lo_nodes->add( '  |         |object |                        | |1' ).
@@ -1329,27 +1329,27 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_cut->mt_json_tree = lo_nodes->mt_nodes.
 
     TRY.
-        lo_cut->zif_a2ui5_ajson~array_to_string_table( '/x' ).
+        lo_cut->z2ui5_if_ajson~array_to_string_table( '/x' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Path not found: /x' ).
     ENDTRY.
 
     TRY.
-        lo_cut->zif_a2ui5_ajson~array_to_string_table( '/' ).
+        lo_cut->z2ui5_if_ajson~array_to_string_table( '/' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Array expected at: /' ).
     ENDTRY.
 
     TRY.
-        lo_cut->zif_a2ui5_ajson~array_to_string_table( '/a' ).
+        lo_cut->z2ui5_if_ajson~array_to_string_table( '/a' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Array expected at: /a' ).
@@ -1361,9 +1361,9 @@ CLASS ltcl_reader_test IMPLEMENTATION.
     lo_cut->mt_json_tree = lo_nodes->mt_nodes.
 
     TRY.
-        lo_cut->zif_a2ui5_ajson~array_to_string_table( '/' ).
+        lo_cut->z2ui5_if_ajson~array_to_string_table( '/' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Cannot convert [object] to string at [/1]' ).
@@ -1414,52 +1414,52 @@ CLASS ltcl_json_to_abap DEFINITION
 
     METHODS to_abap_struc
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_timestamp_initial
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_value
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_array
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_array_of_arrays_simple
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_array_of_arrays
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_w_tab_of_struc
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_w_plain_tab
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_hashed_tab
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_sorted_tab
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_hashed_plain_tab
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_negative
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_corresponding
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_corresponding_negative
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_corresponding_public
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_corresponding_pub_neg
       FOR TESTING
-      RAISING zcx_a2ui5_ajson_error.
+      RAISING z2ui5_cx_ajson_error.
     METHODS to_abap_time
       FOR TESTING
       RAISING cx_static_check.
@@ -1483,7 +1483,7 @@ CLASS ltcl_json_to_abap DEFINITION
       RAISING cx_static_check.
 ENDCLASS.
 
-CLASS zcl_a2ui5_ajson DEFINITION LOCAL FRIENDS ltcl_json_to_abap.
+CLASS z2ui5_cl_ajson DEFINITION LOCAL FRIENDS ltcl_json_to_abap.
 
 CLASS ltcl_json_to_abap IMPLEMENTATION.
 
@@ -1909,7 +1909,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
   METHOD to_abap_negative.
 
     DATA lo_cut TYPE REF TO lcl_json_to_abap.
-    DATA lx TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lx TYPE REF TO z2ui5_cx_ajson_error.
     DATA ls_mock TYPE ty_complex.
 
     CREATE OBJECT lo_cut.
@@ -1927,7 +1927,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = ls_mock ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Expected structure' ).
@@ -1944,7 +1944,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = ls_mock ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Expected table' ).
@@ -1961,7 +1961,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = ls_mock ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Source is not a number' ).
@@ -1978,7 +1978,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = ls_mock ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Unexpected date format' ).
@@ -1995,7 +1995,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = ls_mock ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Path not found' ).
@@ -2013,7 +2013,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = lt_str ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Need index to access tables' ).
@@ -2030,7 +2030,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = lr_obj ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Cannot assign to ref' ).
@@ -2047,7 +2047,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = lr_data ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Cannot assign to ref' ).
@@ -2066,7 +2066,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = lt_hashed ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Duplicate insertion' ).
@@ -2110,7 +2110,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
     DATA ls_act TYPE ty_struc.
     DATA ls_exp  TYPE ty_struc.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lx TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lx TYPE REF TO z2ui5_cx_ajson_error.
 
     CREATE OBJECT lo_nodes.
     lo_nodes->add( '       |           |object |                          | ' ).
@@ -2128,7 +2128,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         CHANGING
           c_container = ls_act ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Path not found' ).
@@ -2138,10 +2138,10 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
 
   METHOD to_abap_corresponding_public.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA ls_act TYPE ty_struc.
     DATA ls_exp  TYPE ty_struc.
-    DATA li_json TYPE REF TO zif_a2ui5_ajson.
+    DATA li_json TYPE REF TO z2ui5_if_ajson.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
 
     CREATE OBJECT lo_nodes.
@@ -2176,11 +2176,11 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
 
   METHOD to_abap_corresponding_pub_neg.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA ls_act TYPE ty_struc.
     DATA ls_exp  TYPE ty_struc.
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lx TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lx TYPE REF TO z2ui5_cx_ajson_error.
 
     CREATE OBJECT lo_nodes.
     lo_nodes->add( '       |           |object |                          | ' ).
@@ -2196,7 +2196,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
         lo_cut->to_abap( IMPORTING ev_container = ls_act ).
 
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Path not found' ).
@@ -2213,7 +2213,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
 
     DATA lt_foo_bar TYPE STANDARD TABLE OF ty_foo_bar.
     DATA ls_foo_bar LIKE LINE OF lt_foo_bar.
-    DATA lo_ajson TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_ajson TYPE REF TO z2ui5_cl_ajson.
     DATA lv_json TYPE string.
 
     lv_json =
@@ -2227,7 +2227,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
     '  }' &&
     ']'.
 
-    lo_ajson = zcl_a2ui5_ajson=>parse( lv_json ).
+    lo_ajson = z2ui5_cl_ajson=>parse( lv_json ).
 
     lo_ajson->to_abap( IMPORTING ev_container = lt_foo_bar ).
 
@@ -2246,7 +2246,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
 
     DATA lt_foo_bar TYPE STANDARD TABLE OF ty_foo_bar WITH NON-UNIQUE KEY foo.
     DATA ls_foo_bar LIKE LINE OF lt_foo_bar.
-    DATA lo_ajson TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_ajson TYPE REF TO z2ui5_cl_ajson.
     DATA lv_json TYPE string.
 
     lv_json =
@@ -2260,7 +2260,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
     '  }' &&
     ']'.
 
-    lo_ajson = zcl_a2ui5_ajson=>parse( lv_json ).
+    lo_ajson = z2ui5_cl_ajson=>parse( lv_json ).
 
     lo_ajson->to_abap( IMPORTING ev_container = lt_foo_bar ).
 
@@ -2279,7 +2279,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
 
     DATA lt_foo_bar TYPE SORTED TABLE OF ty_foo_bar WITH NON-UNIQUE KEY foo.
     DATA ls_foo_bar LIKE LINE OF lt_foo_bar.
-    DATA lo_ajson TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_ajson TYPE REF TO z2ui5_cl_ajson.
     DATA lv_json TYPE string.
 
     lv_json =
@@ -2293,7 +2293,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
     '  }' &&
     ']'.
 
-    lo_ajson = zcl_a2ui5_ajson=>parse( lv_json ).
+    lo_ajson = z2ui5_cl_ajson=>parse( lv_json ).
 
     lo_ajson->to_abap( IMPORTING ev_container = lt_foo_bar ).
 
@@ -2312,7 +2312,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
 
     DATA lt_foo_bar TYPE SORTED TABLE OF ty_foo_bar WITH UNIQUE KEY foo.
     DATA ls_foo_bar LIKE LINE OF lt_foo_bar.
-    DATA lo_ajson TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_ajson TYPE REF TO z2ui5_cl_ajson.
     DATA lv_json TYPE string.
 
     lv_json =
@@ -2326,7 +2326,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
     '  }' &&
     ']'.
 
-    lo_ajson = zcl_a2ui5_ajson=>parse( lv_json ).
+    lo_ajson = z2ui5_cl_ajson=>parse( lv_json ).
 
     lo_ajson->to_abap( IMPORTING ev_container = lt_foo_bar ).
 
@@ -2345,7 +2345,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
 
     DATA lt_foo_bar TYPE HASHED TABLE OF ty_foo_bar WITH UNIQUE KEY foo.
     DATA ls_foo_bar LIKE LINE OF lt_foo_bar.
-    DATA lo_ajson TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_ajson TYPE REF TO z2ui5_cl_ajson.
     DATA lv_json TYPE string.
 
     lv_json =
@@ -2359,7 +2359,7 @@ CLASS ltcl_json_to_abap IMPLEMENTATION.
     '  }' &&
     ']'.
 
-    lo_ajson = zcl_a2ui5_ajson=>parse( lv_json ).
+    lo_ajson = z2ui5_cl_ajson=>parse( lv_json ).
 
     lo_ajson->to_abap( IMPORTING ev_container = lt_foo_bar ).
 
@@ -2382,58 +2382,58 @@ CLASS ltcl_writer_test DEFINITION FINAL
 
   PRIVATE SECTION.
 
-    METHODS set_ajson FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_value FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS ignore_empty FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_obj FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_obj_w_date_time FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_tab FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_tab_hashed FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_tab_nested_struct FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS prove_path_exists FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS delete_subtree FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS delete FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS arrays FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS arrays_negative FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS root_assignment FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_bool_abap_bool FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_bool_int FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_bool_tab FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_str FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_int FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_date FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_timestamp FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS read_only FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_array_obj FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_with_type FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS new_array_w_keep_order_touch FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS overwrite_w_keep_order_touch FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS overwrite_w_keep_order_set FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS setx FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS setx_float FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS setx_complex FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS setx_complex_w_keep_order FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS set_ajson FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_value FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS ignore_empty FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_obj FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_obj_w_date_time FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_tab FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_tab_hashed FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_tab_nested_struct FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS prove_path_exists FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS delete_subtree FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS delete FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS arrays FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS arrays_negative FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS root_assignment FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_bool_abap_bool FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_bool_int FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_bool_tab FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_str FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_int FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_date FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_timestamp FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS read_only FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_array_obj FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_with_type FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS new_array_w_keep_order_touch FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS overwrite_w_keep_order_touch FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS overwrite_w_keep_order_set FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS setx FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS setx_float FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS setx_complex FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS setx_complex_w_keep_order FOR TESTING RAISING z2ui5_cx_ajson_error.
 
     METHODS set_with_type_slice
       IMPORTING
-        io_json_in TYPE REF TO zcl_a2ui5_ajson
-        io_json_out TYPE REF TO zif_a2ui5_ajson
+        io_json_in TYPE REF TO z2ui5_cl_ajson
+        io_json_out TYPE REF TO z2ui5_if_ajson
         iv_path TYPE string
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
-CLASS zcl_a2ui5_ajson DEFINITION LOCAL FRIENDS ltcl_writer_test.
+CLASS z2ui5_cl_ajson DEFINITION LOCAL FRIENDS ltcl_writer_test.
 
 CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD prove_path_exists.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
 
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |     ||1' ).
@@ -2460,10 +2460,10 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD delete_subtree.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
 
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |     ||1' ).
@@ -2490,10 +2490,10 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD delete.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
 
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |     ||1' ).
@@ -2508,7 +2508,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
     lo_nodes_exp->add( '        |      |object |     ||1' ).
     lo_nodes_exp->add( '/       |a     |object |     ||0' ).
 
-    lo_cut->zif_a2ui5_ajson~delete( iv_path = '/a/b' ).
+    lo_cut->z2ui5_if_ajson~delete( iv_path = '/a/b' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->mt_json_tree
@@ -2527,7 +2527,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
     lo_nodes_exp->add( '        |      |object |     ||1' ).
     lo_nodes_exp->add( '/       |a     |object |     ||0' ).
 
-    lo_cut->zif_a2ui5_ajson~delete( iv_path = '/a/b/' ).
+    lo_cut->z2ui5_if_ajson~delete( iv_path = '/a/b/' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->mt_json_tree
@@ -2538,12 +2538,12 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD set_ajson.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lo_src TYPE REF TO zcl_a2ui5_ajson.
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_src TYPE REF TO z2ui5_cl_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
-    lo_src = zcl_a2ui5_ajson=>create_empty( ).
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_src = z2ui5_cl_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     " Prepare source
@@ -2608,10 +2608,10 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD set_value.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     " Prepare source
@@ -2639,9 +2639,9 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD ignore_empty.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
 
-    li_cut = zcl_a2ui5_ajson=>create_empty( ).
+    li_cut = z2ui5_cl_ajson=>create_empty( ).
 
     CREATE OBJECT lo_nodes.
     lo_nodes->add( '        |      |object |     ||1' ).
@@ -2675,8 +2675,8 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD set_obj.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
     DATA:
       BEGIN OF ls_struc,
@@ -2685,7 +2685,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         d TYPE d VALUE '20220401',
       END OF ls_struc.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     " Prepare source
@@ -2708,8 +2708,8 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD set_obj_w_date_time.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lo_cut TYPE REF TO zif_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_if_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
     DATA:
       BEGIN OF ls_struc,
@@ -2721,7 +2721,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         p(5)    TYPE p DECIMALS 2 VALUE '123.45',
       END OF ls_struc.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( )->format_datetime( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( )->format_datetime( ).
     li_writer = lo_cut.
 
     " Prepare source
@@ -2746,11 +2746,11 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD set_tab.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
     DATA lt_tab TYPE string_table.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     APPEND 'hello' TO lt_tab.
@@ -2775,11 +2775,11 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD set_tab_hashed.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
     DATA lt_tab TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     INSERT `hello` INTO TABLE lt_tab.
@@ -2815,11 +2815,11 @@ CLASS ltcl_writer_test IMPLEMENTATION.
       ty_tab TYPE STANDARD TABLE OF ty_struct WITH KEY str.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
     DATA ls_tab TYPE ty_struct.
     DATA lt_tab TYPE ty_tab.
 
-    li_cut = zcl_a2ui5_ajson=>create_empty( ).
+    li_cut = z2ui5_cl_ajson=>create_empty( ).
 
     ls_tab-str = 'hello'.
     ls_tab-int = 123.
@@ -2853,11 +2853,11 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD arrays.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     " touch
@@ -2949,10 +2949,10 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD arrays_negative.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     li_writer->touch_array( iv_path = '/a' ).
@@ -2961,11 +2961,11 @@ CLASS ltcl_writer_test IMPLEMENTATION.
       iv_val = 123 ).
 
     " touch another node
-    DATA lx TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lx TYPE REF TO z2ui5_cx_ajson_error.
     TRY.
         li_writer->touch_array( iv_path = '/a/1' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Path [/a/1] already used and is not array' ).
@@ -2977,7 +2977,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         iv_path = '/a/1'
         iv_val  = 123 ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Path [/a/1] is not array' ).
@@ -2989,7 +2989,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         iv_path = '/x'
         iv_val  = 123 ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Path [/x] does not exist' ).
@@ -3001,7 +3001,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         iv_path = '/a/abc/x'
         iv_val  = 123 ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Cannot add non-numeric key [abc] to array [/a/]' ).
@@ -3012,7 +3012,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         iv_path = '/a/abc'
         iv_val  = 123 ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Cannot add non-numeric key [abc] to array [/a/]' ).
@@ -3024,7 +3024,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         iv_path = '/a/0'
         iv_val  = 123 ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx.
+      CATCH z2ui5_cx_ajson_error INTO lx.
         cl_abap_unit_assert=>assert_equals(
         act = lx->message
         exp = 'Cannot add zero key to array [/a/]' ).
@@ -3035,15 +3035,15 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD root_assignment.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
     DATA:
       BEGIN OF ls_dummy,
         x TYPE string VALUE 'hello',
       END OF ls_dummy.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     " object
@@ -3105,12 +3105,12 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD set_bool_abap_bool.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
     " abap_bool
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |      ||2' ).
@@ -3132,12 +3132,12 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD set_bool_int.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
     " int
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |      ||2' ).
@@ -3159,13 +3159,13 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD set_bool_tab.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
     DATA lt_tab TYPE string_table.
 
     " tab
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |      ||2' ).
@@ -3189,12 +3189,12 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD set_str.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
     DATA lv_date TYPE d.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |         ||3' ).
@@ -3221,11 +3221,11 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD set_int.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |         ||1' ).
@@ -3243,12 +3243,12 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD set_date.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
     DATA lv_date TYPE d.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |           ||2' ).
@@ -3273,12 +3273,12 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD set_timestamp.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
     DATA lv_timestamp TYPE timestamp.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '        |      |object |                     ||1' ).
@@ -3297,10 +3297,10 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD read_only.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     " Prepare source
@@ -3319,13 +3319,13 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         iv_path = '/c'
         iv_val  = 'abc' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
     TRY.
         li_writer->touch_array( iv_path = '/d' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
     TRY.
@@ -3333,28 +3333,28 @@ CLASS ltcl_writer_test IMPLEMENTATION.
         iv_path = '/b'
         iv_val  = 'xyz' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
     TRY.
         li_writer->delete( iv_path = '/a' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
     TRY.
         li_writer->clear( ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
   ENDMETHOD.
 
   METHOD set_array_obj.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
     CREATE OBJECT lo_nodes_exp.
     lo_nodes_exp->add( '                 |         |object |                        |  |1' ).
@@ -3368,7 +3368,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
     lo_nodes_exp->add( '/issues/2/end/   |col      |num    |22                      |  |0' ).
     lo_nodes_exp->add( '/issues/2/end/   |row      |num    |3                       |  |0' ).
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     li_writer->touch_array( iv_path = '/issues' ).
@@ -3393,13 +3393,13 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD set_with_type.
 
-    DATA lo_sample TYPE REF TO zcl_a2ui5_ajson.
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_sample TYPE REF TO z2ui5_cl_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
 
-    lo_sample = zcl_a2ui5_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
+    lo_sample = z2ui5_cl_ajson=>parse( ltcl_parser_test=>sample_json( ) ).
 
-    lo_cut = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     set_with_type_slice( io_json_in  = lo_sample
@@ -3421,12 +3421,12 @@ CLASS ltcl_writer_test IMPLEMENTATION.
     LOOP AT io_json_in->mt_json_tree ASSIGNING <node> WHERE path = iv_path.
       lv_path = <node>-path && <node>-name && '/'.
       CASE <node>-type.
-        WHEN zif_a2ui5_ajson_types=>node_type-array.
+        WHEN z2ui5_if_ajson_types=>node_type-array.
           io_json_out->touch_array( lv_path ).
           set_with_type_slice( io_json_in  = io_json_in
                                io_json_out = io_json_out
                                iv_path     = lv_path ).
-        WHEN zif_a2ui5_ajson_types=>node_type-object.
+        WHEN z2ui5_if_ajson_types=>node_type-object.
           set_with_type_slice( io_json_in  = io_json_in
                                io_json_out = io_json_out
                                iv_path     = lv_path ).
@@ -3442,14 +3442,14 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD overwrite_w_keep_order_set.
 
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
     DATA:
       BEGIN OF ls_dummy,
         b TYPE i,
         a TYPE i,
       END OF ls_dummy.
 
-    li_cut = zcl_a2ui5_ajson=>create_empty(
+    li_cut = z2ui5_cl_ajson=>create_empty(
     )->set(
       iv_ignore_empty = abap_false
       iv_path = '/'
@@ -3459,7 +3459,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
       act = li_cut->stringify( )
       exp = '{"a":0,"b":0}' ). " ordered by path, name
 
-    li_cut = zcl_a2ui5_ajson=>create_empty(
+    li_cut = z2ui5_cl_ajson=>create_empty(
     )->keep_item_order(
     )->set(
       iv_ignore_empty = abap_false
@@ -3482,10 +3482,10 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD new_array_w_keep_order_touch.
 
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
 
     " default order adds new arrays at beginning of node (pos 0)
-    li_cut = zcl_a2ui5_ajson=>create_empty(
+    li_cut = z2ui5_cl_ajson=>create_empty(
     )->set(
       iv_path = '/b'
       iv_val  = 1 ).
@@ -3497,7 +3497,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
       exp = '{"a":[],"b":1}' ).
 
     " with keep order, new array is created at end of node
-    li_cut = zcl_a2ui5_ajson=>create_empty(
+    li_cut = z2ui5_cl_ajson=>create_empty(
     )->keep_item_order(
     )->set(
       iv_path = '/b'
@@ -3513,14 +3513,14 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 
   METHOD overwrite_w_keep_order_touch.
 
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
     DATA:
       BEGIN OF ls_dummy,
         b TYPE i,
         a TYPE string_table,
       END OF ls_dummy.
 
-    li_cut = zcl_a2ui5_ajson=>create_empty(
+    li_cut = z2ui5_cl_ajson=>create_empty(
     )->set(
       iv_ignore_empty = abap_false
       iv_path = '/'
@@ -3530,7 +3530,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
       act = li_cut->stringify( )
       exp = '{"a":[],"b":0}' ). " ordered by path, name
 
-    li_cut = zcl_a2ui5_ajson=>create_empty(
+    li_cut = z2ui5_cl_ajson=>create_empty(
     )->keep_item_order(
     )->set(
       iv_ignore_empty = abap_false
@@ -3554,47 +3554,47 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD setx.
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:1' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:1' )->stringify( )
       exp = '{"a":1}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a : 1' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a : 1' )->stringify( )
       exp = '{"a":1}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:"1"' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:"1"' )->stringify( )
       exp = '{"a":"1"}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:abc' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:abc' )->stringify( )
       exp = '{"a":"abc"}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:null' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:null' )->stringify( )
       exp = '{"a":null}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:true' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:true' )->stringify( )
       exp = '{"a":true}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:"true"' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:"true"' )->stringify( )
       exp = '{"a":"true"}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:false' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:false' )->stringify( )
       exp = '{"a":false}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a/b:1' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a/b:1' )->stringify( )
       exp = '{"a":{"b":1}}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/:1' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/:1' )->stringify( )
       exp = '1' ). " Because set( path = '/' ) would write root node
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( ':1' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( ':1' )->stringify( )
       exp = '1' ). " Because set( path = '' ) would write root node
 
 *    cl_abap_unit_assert=>assert_equals(
@@ -3606,7 +3606,7 @@ CLASS ltcl_writer_test IMPLEMENTATION.
 *      exp = '{}' ). " should setx ignore empty values or set an empty string ? Or null ?
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:""' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:""' )->stringify( )
       exp = '{"a":""}' ).
 
   ENDMETHOD.
@@ -3614,23 +3614,23 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD setx_float.
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:1.123' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:1.123' )->stringify( )
       exp = '{"a":1.123}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:00.123' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:00.123' )->stringify( )
       exp = '{"a":"00.123"}' ). " not a number
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:.123' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:.123' )->stringify( )
       exp = '{"a":".123"}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:123.' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:123.' )->stringify( )
       exp = '{"a":"123."}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:1..123' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:1..123' )->stringify( )
       exp = '{"a":"1..123"}' ).
 
   ENDMETHOD.
@@ -3638,45 +3638,45 @@ CLASS ltcl_writer_test IMPLEMENTATION.
   METHOD setx_complex.
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:{"b" : 1}' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:{"b" : 1}' )->stringify( )
       exp = '{"a":{"b":1}}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:{}' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:{}' )->stringify( )
       exp = '{"a":{}}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:[1, 2]' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:[1, 2]' )->stringify( )
       exp = '{"a":[1,2]}' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson=>new( )->setx( '/a:[]' )->stringify( )
+      act = z2ui5_cl_ajson=>new( )->setx( '/a:[]' )->stringify( )
       exp = '{"a":[]}' ).
 
     TRY.
-        zcl_a2ui5_ajson=>new( )->setx( '/a:{"b" : 1' ).
+        z2ui5_cl_ajson=>new( )->setx( '/a:{"b" : 1' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
     TRY.
-        zcl_a2ui5_ajson=>new( )->setx( '/a:[1, 2' ).
+        z2ui5_cl_ajson=>new( )->setx( '/a:[1, 2' ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error.
+      CATCH z2ui5_cx_ajson_error.
     ENDTRY.
 
   ENDMETHOD.
 
   METHOD setx_complex_w_keep_order.
 
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
     DATA:
       BEGIN OF ls_dummy,
         f TYPE i VALUE 5,
         e TYPE i VALUE 6,
       END OF ls_dummy.
 
-    li_cut = zcl_a2ui5_ajson=>new( iv_keep_item_order = abap_true ).
+    li_cut = z2ui5_cl_ajson=>new( iv_keep_item_order = abap_true ).
     li_cut->setx( '/c:3' ).
     li_cut->set(
       iv_path = '/b'
@@ -3742,14 +3742,14 @@ CLASS ltcl_integrated DEFINITION
         issues TYPE tt_issues,
       END OF ty_target.
 
-    METHODS reader FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS array_index FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS array_simple FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS stringify FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS item_order_integrated FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS chaining FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS push_json FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS is_empty FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS reader FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS array_index FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS array_simple FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS stringify FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS item_order_integrated FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS chaining FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS push_json FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS is_empty FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -3773,8 +3773,8 @@ CLASS ltcl_integrated IMPLEMENTATION.
     ENDDO.
     lv_src = lv_src && ']'.
 
-    DATA li_reader TYPE REF TO zif_a2ui5_ajson.
-    li_reader = zcl_a2ui5_ajson=>parse( lv_src ).
+    DATA li_reader TYPE REF TO z2ui5_if_ajson.
+    li_reader = z2ui5_cl_ajson=>parse( lv_src ).
     li_reader->to_abap( IMPORTING ev_container = lt_act ).
 
     cl_abap_unit_assert=>assert_equals(
@@ -3801,8 +3801,8 @@ CLASS ltcl_integrated IMPLEMENTATION.
     ENDDO.
     lv_src = lv_src && ']'.
 
-    DATA li_reader TYPE REF TO zif_a2ui5_ajson.
-    li_reader = zcl_a2ui5_ajson=>parse( lv_src ).
+    DATA li_reader TYPE REF TO z2ui5_if_ajson.
+    li_reader = z2ui5_cl_ajson=>parse( lv_src ).
     li_reader->to_abap( IMPORTING ev_container = lt_act ).
 
     cl_abap_unit_assert=>assert_equals(
@@ -3814,10 +3814,10 @@ CLASS ltcl_integrated IMPLEMENTATION.
   METHOD reader.
 
     DATA lv_source TYPE string.
-    DATA li_reader TYPE REF TO zif_a2ui5_ajson.
+    DATA li_reader TYPE REF TO z2ui5_if_ajson.
 
     lv_source = ltcl_parser_test=>sample_json( ).
-    li_reader = zcl_a2ui5_ajson=>parse( lv_source ).
+    li_reader = z2ui5_cl_ajson=>parse( lv_source ).
 
     cl_abap_unit_assert=>assert_equals(
       act = li_reader->get( '/string' )
@@ -3862,14 +3862,14 @@ CLASS ltcl_integrated IMPLEMENTATION.
 
   METHOD stringify.
 
-    DATA lo_cut TYPE REF TO zcl_a2ui5_ajson.
-    DATA li_writer TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_cut TYPE REF TO z2ui5_cl_ajson.
+    DATA li_writer TYPE REF TO z2ui5_if_ajson.
     DATA lv_exp TYPE string.
     DATA: BEGIN OF ls_dummy, x TYPE i, END OF ls_dummy.
-    DATA: BEGIN OF ls_data, str TYPE string, cls TYPE REF TO zcl_a2ui5_ajson, END OF ls_data.
+    DATA: BEGIN OF ls_data, str TYPE string, cls TYPE REF TO z2ui5_cl_ajson, END OF ls_data.
 
     ls_dummy-x = 1.
-    lo_cut    = zcl_a2ui5_ajson=>create_empty( ).
+    lo_cut    = z2ui5_cl_ajson=>create_empty( ).
     li_writer = lo_cut.
 
     li_writer->set(
@@ -3960,14 +3960,14 @@ CLASS ltcl_integrated IMPLEMENTATION.
 
     DATA lv_act TYPE string.
     DATA lv_exp TYPE string.
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
 
     ls_dummy-alpha = 'a'.
     ls_dummy-beta  = 'b'.
     ls_dummy-zulu  = 'z'.
 
     " NAME order
-    li_cut = zcl_a2ui5_ajson=>create_empty( ).
+    li_cut = z2ui5_cl_ajson=>create_empty( ).
     li_cut->set(
       iv_path = '/'
       iv_val  = ls_dummy ).
@@ -3980,7 +3980,7 @@ CLASS ltcl_integrated IMPLEMENTATION.
       exp = lv_exp ).
 
     " STRUC order (keep)
-    li_cut = zcl_a2ui5_ajson=>create_empty( ).
+    li_cut = z2ui5_cl_ajson=>create_empty( ).
     li_cut->keep_item_order( ).
     li_cut->set(
       iv_path = '/'
@@ -3997,9 +3997,9 @@ CLASS ltcl_integrated IMPLEMENTATION.
 
   METHOD chaining.
 
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
 
-    li_cut = zcl_a2ui5_ajson=>create_empty( ).
+    li_cut = z2ui5_cl_ajson=>create_empty( ).
 
     cl_abap_unit_assert=>assert_bound(
       li_cut->set(
@@ -4021,13 +4021,13 @@ CLASS ltcl_integrated IMPLEMENTATION.
 
   METHOD push_json.
 
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
-    DATA li_sub TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
+    DATA li_sub TYPE REF TO z2ui5_if_ajson.
     DATA lv_act TYPE string.
     DATA lv_exp TYPE string.
 
-    li_cut = zcl_a2ui5_ajson=>create_empty( ).
-    li_sub = zcl_a2ui5_ajson=>create_empty( )->set(
+    li_cut = z2ui5_cl_ajson=>create_empty( ).
+    li_sub = z2ui5_cl_ajson=>create_empty( )->set(
       iv_path = 'a'
       iv_val  = '1' ).
 
@@ -4037,12 +4037,12 @@ CLASS ltcl_integrated IMPLEMENTATION.
       iv_val  = 'hello' ).
     li_cut->push(
       iv_path = '/list'
-      iv_val  = zcl_a2ui5_ajson=>create_empty( )->set(
+      iv_val  = z2ui5_cl_ajson=>create_empty( )->set(
         iv_path = 'a'
         iv_val  = '1' ) ).
     li_cut->push(
       iv_path = '/list'
-      iv_val  = zcl_a2ui5_ajson=>create_empty( )->set(
+      iv_val  = z2ui5_cl_ajson=>create_empty( )->set(
         iv_path = '/'
         iv_val  = 'world' ) ).
 
@@ -4057,9 +4057,9 @@ CLASS ltcl_integrated IMPLEMENTATION.
 
   METHOD is_empty.
 
-    DATA li_cut TYPE REF TO zif_a2ui5_ajson.
+    DATA li_cut TYPE REF TO z2ui5_if_ajson.
 
-    li_cut = zcl_a2ui5_ajson=>create_empty( ).
+    li_cut = z2ui5_cl_ajson=>create_empty( ).
 
     cl_abap_unit_assert=>assert_equals(
       exp = abap_true
@@ -4112,32 +4112,32 @@ CLASS ltcl_abap_to_json DEFINITION
         el TYPE string,
       END OF ty_named_include.
 
-    METHODS set_ajson FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_value_number FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_value_string FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_value_true FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_value_false FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_value_xsdboolean FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_value_timestamp FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_value_timestamp_initial FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_null FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_obj FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_array FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_complex_obj FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS set_include_with_suffix FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS prefix FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS set_ajson FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_value_number FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_value_string FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_value_true FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_value_false FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_value_xsdboolean FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_value_timestamp FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_value_timestamp_initial FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_null FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_obj FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_array FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_complex_obj FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS set_include_with_suffix FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS prefix FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
-CLASS zcl_a2ui5_ajson DEFINITION LOCAL FRIENDS ltcl_abap_to_json.
+CLASS z2ui5_cl_ajson DEFINITION LOCAL FRIENDS ltcl_abap_to_json.
 
 CLASS ltcl_abap_to_json IMPLEMENTATION.
 
   METHOD set_ajson.
 
     DATA lo_nodes TYPE REF TO lcl_nodes_helper.
-    DATA lo_src TYPE REF TO zcl_a2ui5_ajson.
-    lo_src = zcl_a2ui5_ajson=>create_empty( ).
+    DATA lo_src TYPE REF TO z2ui5_cl_ajson.
+    lo_src = z2ui5_cl_ajson=>create_empty( ).
 
     CREATE OBJECT lo_nodes.
     lo_nodes->add( '        |      |object |     ||1' ).
@@ -4146,7 +4146,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
     lo_nodes->add( '/a/b/   |c     |object |     ||0' ).
     lo_src->mt_json_tree = lo_nodes->mt_nodes.
 
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     lt_nodes = lcl_abap_to_json=>convert( iv_data = lo_src ).
 
     cl_abap_unit_assert=>assert_equals(
@@ -4158,7 +4158,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_value_number.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     " number
     CREATE OBJECT lo_nodes_exp.
@@ -4175,7 +4175,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_value_string.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     " string
     CREATE OBJECT lo_nodes_exp.
@@ -4192,7 +4192,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_value_true.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     " true
     CREATE OBJECT lo_nodes_exp.
@@ -4209,7 +4209,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_value_false.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     " false
     CREATE OBJECT lo_nodes_exp.
@@ -4226,7 +4226,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_value_xsdboolean.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     DATA lv_xsdboolean TYPE xsdboolean.
     CREATE OBJECT lo_nodes_exp.
@@ -4244,7 +4244,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_null.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     DATA lv_null_ref TYPE REF TO data.
 
     " null
@@ -4262,7 +4262,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_value_timestamp.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     DATA lv_timezone TYPE timezone VALUE ''.
 
     DATA lv_timestamp TYPE timestamp.
@@ -4282,7 +4282,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_value_timestamp_initial.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     DATA lv_timestamp TYPE timestamp.
     CREATE OBJECT lo_nodes_exp.
@@ -4300,8 +4300,8 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD prefix.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
-    DATA ls_prefix TYPE zif_a2ui5_ajson_types=>ty_path_name.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
+    DATA ls_prefix TYPE z2ui5_if_ajson_types=>ty_path_name.
 
     ls_prefix-path = '/a/'.
     ls_prefix-name = 'b'.
@@ -4322,7 +4322,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
     DATA ls_struc TYPE ty_struc.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     ls_struc-a = 'abc'.
     ls_struc-b = 10.
@@ -4348,7 +4348,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
     DATA ls_struc TYPE ty_struc_complex.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
     FIELD-SYMBOLS <i> LIKE LINE OF ls_struc-tab.
 
     ls_struc-a = 'abc'.
@@ -4409,7 +4409,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
     DATA ls_struc TYPE ty_named_include.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     ls_struc-a_suf = 'abc'.
     ls_struc-b_suf = 10.
@@ -4436,7 +4436,7 @@ CLASS ltcl_abap_to_json IMPLEMENTATION.
   METHOD set_array.
 
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
-    DATA lt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt.
+    DATA lt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt.
 
     DATA lt_tab TYPE TABLE OF ty_struc.
     FIELD-SYMBOLS <s> LIKE LINE OF lt_tab.
@@ -4496,28 +4496,28 @@ CLASS ltcl_filter_test DEFINITION FINAL
   RISK LEVEL HARMLESS.
 
   PUBLIC SECTION.
-    INTERFACES zif_a2ui5_ajson_filter.
+    INTERFACES z2ui5_if_ajson_filter.
 
   PRIVATE SECTION.
 
     TYPES:
       BEGIN OF ty_visit_history,
         path TYPE string,
-        type TYPE zif_a2ui5_ajson_filter=>ty_visit_type,
+        type TYPE z2ui5_if_ajson_filter=>ty_visit_type,
       END OF ty_visit_history.
 
     DATA mt_visit_history TYPE TABLE OF ty_visit_history.
 
-    METHODS simple_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS array_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS visit_types FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS simple_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS array_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS visit_types FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 
 ENDCLASS.
 
 CLASS ltcl_filter_test IMPLEMENTATION.
 
-  METHOD zif_a2ui5_ajson_filter~keep_node.
+  METHOD z2ui5_if_ajson_filter~keep_node.
 
     DATA ls_visit_history LIKE LINE OF mt_visit_history.
 
@@ -4533,11 +4533,11 @@ CLASS ltcl_filter_test IMPLEMENTATION.
 
   METHOD simple_test.
 
-    DATA lo_json TYPE REF TO zcl_a2ui5_ajson.
-    DATA lo_json_filtered TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_json TYPE REF TO z2ui5_cl_ajson.
+    DATA lo_json_filtered TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    lo_json = zcl_a2ui5_ajson=>create_empty( ).
+    lo_json = z2ui5_cl_ajson=>create_empty( ).
     lo_json->set(
       iv_path = '/a'
       iv_val  = 1 ).
@@ -4554,7 +4554,7 @@ CLASS ltcl_filter_test IMPLEMENTATION.
       iv_path = '/c/y'
       iv_val  = 1 ).
 
-    lo_json_filtered = zcl_a2ui5_ajson=>create_from(
+    lo_json_filtered = z2ui5_cl_ajson=>create_from(
       ii_source_json = lo_json
       ii_filter      = me ).
 
@@ -4573,11 +4573,11 @@ CLASS ltcl_filter_test IMPLEMENTATION.
 
   METHOD array_test.
 
-    DATA lo_json TYPE REF TO zcl_a2ui5_ajson.
-    DATA lo_json_filtered TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_json TYPE REF TO z2ui5_cl_ajson.
+    DATA lo_json_filtered TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    lo_json = zcl_a2ui5_ajson=>create_empty( ).
+    lo_json = z2ui5_cl_ajson=>create_empty( ).
     lo_json->touch_array( '/' ).
     lo_json->push(
       iv_path = '/'
@@ -4613,7 +4613,7 @@ CLASS ltcl_filter_test IMPLEMENTATION.
       iv_path = '/'
       iv_val  = 'j' ).
 
-    lo_json_filtered = zcl_a2ui5_ajson=>create_from(
+    lo_json_filtered = z2ui5_cl_ajson=>create_from(
       ii_source_json = lo_json
       ii_filter      = me ).
 
@@ -4638,8 +4638,8 @@ CLASS ltcl_filter_test IMPLEMENTATION.
 
   METHOD visit_types.
 
-    DATA lo_json TYPE REF TO zcl_a2ui5_ajson.
-    DATA lo_json_filtered TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_json TYPE REF TO z2ui5_cl_ajson.
+    DATA lo_json_filtered TYPE REF TO z2ui5_cl_ajson.
 
     DATA lt_visits_exp LIKE mt_visit_history.
     FIELD-SYMBOLS <v> LIKE LINE OF lt_visits_exp.
@@ -4652,7 +4652,7 @@ CLASS ltcl_filter_test IMPLEMENTATION.
 
     CLEAR mt_visit_history.
 
-    lo_json = zcl_a2ui5_ajson=>create_empty( ).
+    lo_json = z2ui5_cl_ajson=>create_empty( ).
     lo_json->touch_array( '/' ).
     lo_json->push(
       iv_path = '/'
@@ -4664,22 +4664,22 @@ CLASS ltcl_filter_test IMPLEMENTATION.
       iv_path = '/'
       iv_val  = ls_dummy ).
 
-    lo_json_filtered = zcl_a2ui5_ajson=>create_from(
+    lo_json_filtered = z2ui5_cl_ajson=>create_from(
       ii_source_json = lo_json
       ii_filter      = me ).
 
     APPEND INITIAL LINE TO lt_visits_exp ASSIGNING <v>.
     <v>-path = '/'.
-    <v>-type = zif_a2ui5_ajson_filter=>visit_type-open.
+    <v>-type = z2ui5_if_ajson_filter=>visit_type-open.
     APPEND INITIAL LINE TO lt_visits_exp ASSIGNING <v>.
     <v>-path = '/3/'.
-    <v>-type = zif_a2ui5_ajson_filter=>visit_type-open.
+    <v>-type = z2ui5_if_ajson_filter=>visit_type-open.
     APPEND INITIAL LINE TO lt_visits_exp ASSIGNING <v>.
     <v>-path = '/3/'.
-    <v>-type = zif_a2ui5_ajson_filter=>visit_type-close.
+    <v>-type = z2ui5_if_ajson_filter=>visit_type-close.
     APPEND INITIAL LINE TO lt_visits_exp ASSIGNING <v>.
     <v>-path = '/'.
-    <v>-type = zif_a2ui5_ajson_filter=>visit_type-close.
+    <v>-type = z2ui5_if_ajson_filter=>visit_type-close.
 
     cl_abap_unit_assert=>assert_equals(
       act = mt_visit_history
@@ -4699,21 +4699,21 @@ CLASS ltcl_mapper_test DEFINITION FINAL
   RISK LEVEL HARMLESS.
 
   PUBLIC SECTION.
-    INTERFACES zif_a2ui5_ajson_mapping.
+    INTERFACES z2ui5_if_ajson_mapping.
 
   PRIVATE SECTION.
 
-    METHODS simple_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS array_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS duplication_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS empty_name_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS trivial FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS simple_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS array_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS duplication_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS empty_name_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS trivial FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
 CLASS ltcl_mapper_test IMPLEMENTATION.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
     IF cv_name+0(1) = 'a'.
       cv_name = to_upper( cv_name ).
     ENDIF.
@@ -4726,19 +4726,19 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
   ENDMETHOD.
 
   METHOD simple_test.
 
-    DATA lo_json TYPE REF TO zcl_a2ui5_ajson.
-    DATA lo_json_filtered TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_json TYPE REF TO z2ui5_cl_ajson.
+    DATA lo_json_filtered TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    lo_json = zcl_a2ui5_ajson=>create_empty( ).
+    lo_json = z2ui5_cl_ajson=>create_empty( ).
     lo_json->set(
       iv_path = '/ab'
       iv_val  = 1 ).
@@ -4758,7 +4758,7 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
       iv_path = '/a/by'
       iv_val  = 6 ).
 
-    lo_json_filtered = zcl_a2ui5_ajson=>create_from(
+    lo_json_filtered = z2ui5_cl_ajson=>create_from(
       ii_source_json = lo_json
       ii_mapper      = me ).
 
@@ -4781,11 +4781,11 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
 
   METHOD array_test.
 
-    DATA lo_json TYPE REF TO zcl_a2ui5_ajson.
-    DATA lo_json_filtered TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_json TYPE REF TO z2ui5_cl_ajson.
+    DATA lo_json_filtered TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    lo_json = zcl_a2ui5_ajson=>create_empty( ).
+    lo_json = z2ui5_cl_ajson=>create_empty( ).
     lo_json->touch_array( iv_path = '/' ).
     lo_json->set(
       iv_path = '/1/ab'
@@ -4800,7 +4800,7 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
       iv_path = '/2/by'
       iv_val  = 4 ).
 
-    lo_json_filtered = zcl_a2ui5_ajson=>create_from(
+    lo_json_filtered = z2ui5_cl_ajson=>create_from(
       ii_source_json = lo_json
       ii_mapper      = me ).
 
@@ -4820,10 +4820,10 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
 
   METHOD duplication_test.
 
-    DATA lo_json TYPE REF TO zcl_a2ui5_ajson.
-    DATA lx_err TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lo_json TYPE REF TO z2ui5_cl_ajson.
+    DATA lx_err TYPE REF TO z2ui5_cx_ajson_error.
 
-    lo_json = zcl_a2ui5_ajson=>create_empty( ).
+    lo_json = z2ui5_cl_ajson=>create_empty( ).
     lo_json->set(
       iv_path = '/ab'
       iv_val  = 1 ).
@@ -4832,11 +4832,11 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
       iv_val  = 2 ).
 
     TRY.
-        zcl_a2ui5_ajson=>create_from(
+        z2ui5_cl_ajson=>create_from(
         ii_source_json = lo_json
         ii_mapper      = me ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx_err.
+      CATCH z2ui5_cx_ajson_error INTO lx_err.
         cl_abap_unit_assert=>assert_char_cp(
         act = lx_err->get_text( )
         exp = 'Renamed node has a duplicate @/AB' ).
@@ -4846,12 +4846,12 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
 
   METHOD trivial.
 
-    DATA lo_json TYPE REF TO zcl_a2ui5_ajson.
-    DATA lo_json_filtered TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_json TYPE REF TO z2ui5_cl_ajson.
+    DATA lo_json_filtered TYPE REF TO z2ui5_cl_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    lo_json = zcl_a2ui5_ajson=>create_empty( ).
-    lo_json_filtered = zcl_a2ui5_ajson=>create_from(
+    lo_json = z2ui5_cl_ajson=>create_empty( ).
+    lo_json_filtered = z2ui5_cl_ajson=>create_from(
       ii_source_json = lo_json
       ii_mapper      = me ).
     cl_abap_unit_assert=>assert_initial( lo_json_filtered->mt_json_tree ).
@@ -4859,7 +4859,7 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
     lo_json->set(
       iv_path = '/'
       iv_val  = 1 ).
-    lo_json_filtered = zcl_a2ui5_ajson=>create_from(
+    lo_json_filtered = z2ui5_cl_ajson=>create_from(
       ii_source_json = lo_json
       ii_mapper      = me ).
 
@@ -4873,20 +4873,20 @@ CLASS ltcl_mapper_test IMPLEMENTATION.
 
   METHOD empty_name_test.
 
-    DATA lo_json TYPE REF TO zcl_a2ui5_ajson.
-    DATA lx_err TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lo_json TYPE REF TO z2ui5_cl_ajson.
+    DATA lx_err TYPE REF TO z2ui5_cx_ajson_error.
 
-    lo_json = zcl_a2ui5_ajson=>create_empty( ).
+    lo_json = z2ui5_cl_ajson=>create_empty( ).
     lo_json->set(
       iv_path = '/set_this_empty'
       iv_val  = 1 ).
 
     TRY.
-        zcl_a2ui5_ajson=>create_from(
+        z2ui5_cl_ajson=>create_from(
         ii_source_json = lo_json
         ii_mapper      = me ).
         cl_abap_unit_assert=>fail( ).
-      CATCH zcx_a2ui5_ajson_error INTO lx_err.
+      CATCH z2ui5_cx_ajson_error INTO lx_err.
         cl_abap_unit_assert=>assert_char_cp(
         act = lx_err->get_text( )
         exp = 'Renamed node name cannot be empty @/set_this_empty' ).
@@ -4906,16 +4906,16 @@ CLASS ltcl_cloning_test DEFINITION FINAL
   RISK LEVEL HARMLESS.
 
   PUBLIC SECTION.
-    INTERFACES zif_a2ui5_ajson_mapping.
-    INTERFACES zif_a2ui5_ajson_filter.
+    INTERFACES z2ui5_if_ajson_mapping.
+    INTERFACES z2ui5_if_ajson_filter.
 
   PRIVATE SECTION.
 
-    METHODS clone_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS filter_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS mapper_test FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS mapper_and_filter FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS opts_copying FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS clone_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS filter_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS mapper_test FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS mapper_and_filter FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS opts_copying FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -4923,11 +4923,11 @@ CLASS ltcl_cloning_test IMPLEMENTATION.
 
   METHOD clone_test.
 
-    DATA li_json TYPE REF TO zif_a2ui5_ajson.
-    DATA li_json_new TYPE REF TO zif_a2ui5_ajson.
+    DATA li_json TYPE REF TO z2ui5_if_ajson.
+    DATA li_json_new TYPE REF TO z2ui5_if_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    li_json = zcl_a2ui5_ajson=>create_empty( ).
+    li_json = z2ui5_cl_ajson=>create_empty( ).
     li_json->set(
       iv_path = '/ab'
       iv_val  = 1 ).
@@ -4964,11 +4964,11 @@ CLASS ltcl_cloning_test IMPLEMENTATION.
 
   METHOD filter_test.
 
-    DATA li_json TYPE REF TO zif_a2ui5_ajson.
-    DATA li_json_new TYPE REF TO zif_a2ui5_ajson.
+    DATA li_json TYPE REF TO z2ui5_if_ajson.
+    DATA li_json_new TYPE REF TO z2ui5_if_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    li_json = zcl_a2ui5_ajson=>create_empty( ).
+    li_json = z2ui5_cl_ajson=>create_empty( ).
     li_json->set(
       iv_path = '/ab'
       iv_val  = 1 ).
@@ -4990,11 +4990,11 @@ CLASS ltcl_cloning_test IMPLEMENTATION.
 
   METHOD mapper_test.
 
-    DATA li_json TYPE REF TO zif_a2ui5_ajson.
-    DATA li_json_new TYPE REF TO zif_a2ui5_ajson.
+    DATA li_json TYPE REF TO z2ui5_if_ajson.
+    DATA li_json_new TYPE REF TO z2ui5_if_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    li_json = zcl_a2ui5_ajson=>create_empty( ).
+    li_json = z2ui5_cl_ajson=>create_empty( ).
     li_json->set(
       iv_path = '/ab'
       iv_val  = 1 ).
@@ -5015,31 +5015,31 @@ CLASS ltcl_cloning_test IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
     IF cv_name+0(1) = 'a'.
       cv_name = to_upper( cv_name ).
     ENDIF.
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_filter~keep_node.
+  METHOD z2ui5_if_ajson_filter~keep_node.
     rv_keep = boolc( is_node-name IS INITIAL OR is_node-name+0(1) <> 'x' ).
   ENDMETHOD.
 
   METHOD mapper_and_filter.
 
-    DATA li_json TYPE REF TO zif_a2ui5_ajson.
-    DATA li_json_new TYPE REF TO zif_a2ui5_ajson.
+    DATA li_json TYPE REF TO z2ui5_if_ajson.
+    DATA li_json_new TYPE REF TO z2ui5_if_ajson.
     DATA lo_nodes_exp TYPE REF TO lcl_nodes_helper.
 
-    li_json = zcl_a2ui5_ajson=>new( ).
+    li_json = z2ui5_cl_ajson=>new( ).
     li_json->set(
       iv_path = '/ab'
       iv_val  = 1 ).
@@ -5050,7 +5050,7 @@ CLASS ltcl_cloning_test IMPLEMENTATION.
       iv_path = '/xy'
       iv_val  = 3 ).
 
-    li_json_new = zcl_a2ui5_ajson=>create_from(
+    li_json_new = z2ui5_cl_ajson=>create_from(
       ii_source_json = li_json
       ii_filter = me
       ii_mapper = me ).
@@ -5068,10 +5068,10 @@ CLASS ltcl_cloning_test IMPLEMENTATION.
 
   METHOD opts_copying.
 
-    DATA li_json TYPE REF TO zif_a2ui5_ajson.
-    DATA li_json_new TYPE REF TO zif_a2ui5_ajson.
+    DATA li_json TYPE REF TO z2ui5_if_ajson.
+    DATA li_json_new TYPE REF TO z2ui5_if_ajson.
 
-    li_json = zcl_a2ui5_ajson=>new( )->keep_item_order( ).
+    li_json = z2ui5_cl_ajson=>new( )->keep_item_order( ).
     li_json->set(
       iv_path = '/ab'
       iv_val  = 1 ).

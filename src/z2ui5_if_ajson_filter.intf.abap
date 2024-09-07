@@ -1,7 +1,7 @@
-INTERFACE zif_a2ui5_ajson_filter
+INTERFACE z2ui5_if_ajson_filter
   PUBLIC.
 
-  TYPES ty_filter_tab TYPE STANDARD TABLE OF REF TO zif_a2ui5_ajson_filter WITH KEY table_line.
+  TYPES ty_filter_tab TYPE STANDARD TABLE OF REF TO z2ui5_if_ajson_filter WITH KEY table_line.
   TYPES ty_visit_type TYPE i.
 
   CONSTANTS:
@@ -13,11 +13,11 @@ INTERFACE zif_a2ui5_ajson_filter
 
   METHODS keep_node
     IMPORTING
-      is_node TYPE zif_a2ui5_ajson_types=>ty_node
+      is_node TYPE z2ui5_if_ajson_types=>ty_node
       iv_visit TYPE ty_visit_type DEFAULT visit_type-value
     RETURNING
       VALUE(rv_keep) TYPE abap_bool
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
 ENDINTERFACE.

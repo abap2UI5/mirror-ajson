@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_A2UI5_AJSON_FILTER_LIB</CLSNAME>
+    <CLSNAME>Z2UI5_CL_AJSON_UTILITIES</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>AJson common typical filters</DESCRIPT>
+    <DESCRIPT>AJSON Utilities</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

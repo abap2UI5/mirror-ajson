@@ -1,4 +1,4 @@
-CLASS zcl_a2ui5_ajson_mapping DEFINITION
+CLASS z2ui5_cl_ajson_mapping DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC.
@@ -15,54 +15,54 @@ CLASS zcl_a2ui5_ajson_mapping DEFINITION
 
     CLASS-METHODS create_camel_case " DEPRECATED
       IMPORTING
-        it_mapping_fields   TYPE zif_a2ui5_ajson_mapping=>ty_mapping_fields OPTIONAL
+        it_mapping_fields   TYPE z2ui5_if_ajson_mapping=>ty_mapping_fields OPTIONAL
         iv_first_json_upper TYPE abap_bool DEFAULT abap_true
       RETURNING
-        VALUE(ri_mapping)   TYPE REF TO zif_a2ui5_ajson_mapping.
+        VALUE(ri_mapping)   TYPE REF TO z2ui5_if_ajson_mapping.
 
     CLASS-METHODS create_upper_case
       IMPORTING
-        it_mapping_fields TYPE zif_a2ui5_ajson_mapping=>ty_mapping_fields OPTIONAL
+        it_mapping_fields TYPE z2ui5_if_ajson_mapping=>ty_mapping_fields OPTIONAL
       RETURNING
-        VALUE(ri_mapping) TYPE REF TO zif_a2ui5_ajson_mapping.
+        VALUE(ri_mapping) TYPE REF TO z2ui5_if_ajson_mapping.
 
     CLASS-METHODS create_lower_case
       IMPORTING
-        it_mapping_fields TYPE zif_a2ui5_ajson_mapping=>ty_mapping_fields OPTIONAL
+        it_mapping_fields TYPE z2ui5_if_ajson_mapping=>ty_mapping_fields OPTIONAL
       RETURNING
-        VALUE(ri_mapping) TYPE REF TO zif_a2ui5_ajson_mapping.
+        VALUE(ri_mapping) TYPE REF TO z2ui5_if_ajson_mapping.
 
     CLASS-METHODS create_field_mapping " DEPRECATED
       IMPORTING
-        it_mapping_fields TYPE zif_a2ui5_ajson_mapping=>ty_mapping_fields
+        it_mapping_fields TYPE z2ui5_if_ajson_mapping=>ty_mapping_fields
       RETURNING
-        VALUE(ri_mapping) TYPE REF TO zif_a2ui5_ajson_mapping.
+        VALUE(ri_mapping) TYPE REF TO z2ui5_if_ajson_mapping.
 
     CLASS-METHODS create_rename
       IMPORTING
-        it_rename_map TYPE zif_a2ui5_ajson_mapping=>tty_rename_map
+        it_rename_map TYPE z2ui5_if_ajson_mapping=>tty_rename_map
         iv_rename_by TYPE i DEFAULT rename_by-attr_name
       RETURNING
-        VALUE(ri_mapping) TYPE REF TO zif_a2ui5_ajson_mapping.
+        VALUE(ri_mapping) TYPE REF TO z2ui5_if_ajson_mapping.
 
     CLASS-METHODS create_compound_mapper
       IMPORTING
-        ii_mapper1 TYPE REF TO zif_a2ui5_ajson_mapping OPTIONAL
-        ii_mapper2 TYPE REF TO zif_a2ui5_ajson_mapping OPTIONAL
-        ii_mapper3 TYPE REF TO zif_a2ui5_ajson_mapping OPTIONAL
-        it_more TYPE zif_a2ui5_ajson_mapping=>ty_table_of OPTIONAL
+        ii_mapper1 TYPE REF TO z2ui5_if_ajson_mapping OPTIONAL
+        ii_mapper2 TYPE REF TO z2ui5_if_ajson_mapping OPTIONAL
+        ii_mapper3 TYPE REF TO z2ui5_if_ajson_mapping OPTIONAL
+        it_more TYPE z2ui5_if_ajson_mapping=>ty_table_of OPTIONAL
       RETURNING
-        VALUE(ri_mapping) TYPE REF TO zif_a2ui5_ajson_mapping.
+        VALUE(ri_mapping) TYPE REF TO z2ui5_if_ajson_mapping.
 
     CLASS-METHODS create_to_snake_case
       RETURNING
-        VALUE(ri_mapping) TYPE REF TO zif_a2ui5_ajson_mapping.
+        VALUE(ri_mapping) TYPE REF TO z2ui5_if_ajson_mapping.
 
     CLASS-METHODS create_to_camel_case
       IMPORTING
         iv_first_json_upper TYPE abap_bool DEFAULT abap_false
       RETURNING
-        VALUE(ri_mapping) TYPE REF TO zif_a2ui5_ajson_mapping.
+        VALUE(ri_mapping) TYPE REF TO z2ui5_if_ajson_mapping.
 
   PROTECTED SECTION.
 
@@ -72,7 +72,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_a2ui5_ajson_mapping IMPLEMENTATION.
+CLASS z2ui5_cl_ajson_mapping IMPLEMENTATION.
 
 
   METHOD create_camel_case.
@@ -87,7 +87,7 @@ CLASS zcl_a2ui5_ajson_mapping IMPLEMENTATION.
 
   METHOD create_compound_mapper.
 
-    DATA lt_queue TYPE zif_a2ui5_ajson_mapping=>ty_table_of.
+    DATA lt_queue TYPE z2ui5_if_ajson_mapping=>ty_table_of.
 
     APPEND ii_mapper1 TO lt_queue.
     APPEND ii_mapper2 TO lt_queue.

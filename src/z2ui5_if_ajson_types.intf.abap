@@ -1,4 +1,4 @@
-INTERFACE zif_a2ui5_ajson_types
+INTERFACE z2ui5_if_ajson_types
   PUBLIC.
 
   TYPES:

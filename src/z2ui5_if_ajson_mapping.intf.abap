@@ -1,4 +1,4 @@
-INTERFACE zif_a2ui5_ajson_mapping
+INTERFACE z2ui5_if_ajson_mapping
   PUBLIC.
 
   TYPES:
@@ -19,7 +19,7 @@ INTERFACE zif_a2ui5_ajson_mapping
       WITH UNIQUE SORTED KEY by_name COMPONENTS from.
 
   TYPES:
-    ty_table_of TYPE STANDARD TABLE OF REF TO zif_a2ui5_ajson_mapping.
+    ty_table_of TYPE STANDARD TABLE OF REF TO z2ui5_if_ajson_mapping.
 
   METHODS to_abap " deprecated, will be removed
     IMPORTING
@@ -37,8 +37,8 @@ INTERFACE zif_a2ui5_ajson_mapping
 
   METHODS rename_node
     IMPORTING
-      !is_node TYPE zif_a2ui5_ajson_types=>ty_node
+      !is_node TYPE z2ui5_if_ajson_types=>ty_node
     CHANGING
-      !cv_name TYPE zif_a2ui5_ajson_types=>ty_node-name.
+      !cv_name TYPE z2ui5_if_ajson_types=>ty_node-name.
 
 ENDINTERFACE.

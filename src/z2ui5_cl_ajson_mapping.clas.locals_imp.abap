@@ -13,7 +13,7 @@ CLASS lcl_mapping_fields IMPLEMENTATION. "DEPRECATED
   ENDMETHOD.
 
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
 
     DATA ls_mapping_field LIKE LINE OF mt_mapping_fields.
 
@@ -26,7 +26,7 @@ CLASS lcl_mapping_fields IMPLEMENTATION. "DEPRECATED
   ENDMETHOD.
 
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
 
     DATA lv_field TYPE string.
     DATA ls_mapping_field LIKE LINE OF mt_mapping_fields.
@@ -41,7 +41,7 @@ CLASS lcl_mapping_fields IMPLEMENTATION. "DEPRECATED
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
 
   ENDMETHOD.
 
@@ -54,27 +54,27 @@ CLASS lcl_rename IMPLEMENTATION.
     mv_rename_by = iv_rename_by.
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
 
     DATA lv_full_path TYPE string.
     DATA lv_pair_found TYPE abap_bool.
     FIELD-SYMBOLS <r> LIKE LINE OF mt_rename_map.
 
     CASE mv_rename_by.
-      WHEN zcl_a2ui5_ajson_mapping=>rename_by-attr_name.
+      WHEN z2ui5_cl_ajson_mapping=>rename_by-attr_name.
         READ TABLE mt_rename_map ASSIGNING <r> WITH TABLE KEY by_name COMPONENTS from = cv_name.
         lv_pair_found = boolc( sy-subrc = 0 ).
-      WHEN zcl_a2ui5_ajson_mapping=>rename_by-full_path.
+      WHEN z2ui5_cl_ajson_mapping=>rename_by-full_path.
         lv_full_path = is_node-path && cv_name.
         READ TABLE mt_rename_map ASSIGNING <r> WITH TABLE KEY by_name COMPONENTS from = lv_full_path.
         lv_pair_found = boolc( sy-subrc = 0 ).
-      WHEN zcl_a2ui5_ajson_mapping=>rename_by-pattern.
+      WHEN z2ui5_cl_ajson_mapping=>rename_by-pattern.
         lv_full_path = is_node-path && cv_name.
         LOOP AT mt_rename_map ASSIGNING <r>.
           IF lv_full_path CP <r>-from.
@@ -99,12 +99,12 @@ CLASS lcl_mapping_to_upper IMPLEMENTATION.
 
   METHOD constructor.
 
-    mi_mapping_fields = zcl_a2ui5_ajson_mapping=>create_field_mapping( it_mapping_fields ).
+    mi_mapping_fields = z2ui5_cl_ajson_mapping=>create_field_mapping( it_mapping_fields ).
 
   ENDMETHOD.
 
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
 
     rv_result = mi_mapping_fields->to_abap( iv_path = iv_path
                                             iv_name = iv_name ).
@@ -112,7 +112,7 @@ CLASS lcl_mapping_to_upper IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
 
     rv_result = mi_mapping_fields->to_json( iv_path = iv_path
                                             iv_name = iv_name ).
@@ -125,7 +125,7 @@ CLASS lcl_mapping_to_upper IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
 
     cv_name = to_upper( cv_name ).
 
@@ -139,12 +139,12 @@ CLASS lcl_mapping_to_lower IMPLEMENTATION.
 
   METHOD constructor.
 
-    mi_mapping_fields = zcl_a2ui5_ajson_mapping=>create_field_mapping( it_mapping_fields ).
+    mi_mapping_fields = z2ui5_cl_ajson_mapping=>create_field_mapping( it_mapping_fields ).
 
   ENDMETHOD.
 
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
 
     rv_result = mi_mapping_fields->to_abap( iv_path = iv_path
                                             iv_name = iv_name ).
@@ -152,7 +152,7 @@ CLASS lcl_mapping_to_lower IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
 
     rv_result = mi_mapping_fields->to_json( iv_path = iv_path
                                             iv_name = iv_name ).
@@ -165,7 +165,7 @@ CLASS lcl_mapping_to_lower IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
 
     cv_name = to_lower( cv_name ).
 
@@ -179,13 +179,13 @@ CLASS lcl_mapping_camel IMPLEMENTATION. "DEPRECATED
 
   METHOD constructor.
 
-    mi_mapping_fields   = zcl_a2ui5_ajson_mapping=>create_field_mapping( it_mapping_fields ).
+    mi_mapping_fields   = z2ui5_cl_ajson_mapping=>create_field_mapping( it_mapping_fields ).
     mv_first_json_upper = iv_first_json_upper.
 
   ENDMETHOD.
 
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
 
     rv_result = mi_mapping_fields->to_abap( iv_path = iv_path
                                             iv_name = iv_name ).
@@ -201,7 +201,7 @@ CLASS lcl_mapping_camel IMPLEMENTATION. "DEPRECATED
   ENDMETHOD.
 
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
 
     TYPES ty_token TYPE c LENGTH 255.
     DATA lt_tokens TYPE STANDARD TABLE OF ty_token.
@@ -238,7 +238,7 @@ CLASS lcl_mapping_camel IMPLEMENTATION. "DEPRECATED
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
 
   ENDMETHOD.
 
@@ -250,7 +250,7 @@ CLASS lcl_compound_mapper IMPLEMENTATION.
     mt_queue = it_queue.
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
 
     DATA ls_node LIKE is_node.
     DATA li_mapper LIKE LINE OF mt_queue.
@@ -268,11 +268,11 @@ CLASS lcl_compound_mapper IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
 
   ENDMETHOD.
 
@@ -280,18 +280,18 @@ ENDCLASS.
 
 CLASS lcl_to_snake IMPLEMENTATION.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
 
     REPLACE ALL OCCURRENCES OF REGEX `([a-z])([A-Z])` IN cv_name WITH `$1_$2`.
     cv_name = to_lower( cv_name ).
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
 
   ENDMETHOD.
 
@@ -303,7 +303,7 @@ CLASS lcl_to_camel IMPLEMENTATION.
     mv_first_json_upper = iv_first_json_upper.
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~rename_node.
+  METHOD z2ui5_if_ajson_mapping~rename_node.
 
     TYPES lty_token TYPE c LENGTH 255.
     CONSTANTS lc_forced_underscore_marker TYPE c LENGTH 1 VALUE cl_abap_char_utilities=>horizontal_tab.
@@ -330,11 +330,11 @@ CLASS lcl_to_camel IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_abap.
+  METHOD z2ui5_if_ajson_mapping~to_abap.
 
   ENDMETHOD.
 
-  METHOD zif_a2ui5_ajson_mapping~to_json.
+  METHOD z2ui5_if_ajson_mapping~to_json.
 
   ENDMETHOD.
 
