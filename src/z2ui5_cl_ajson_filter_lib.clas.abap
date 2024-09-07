@@ -1,4 +1,4 @@
-CLASS zcl_a2ui5_ajson_filter_lib DEFINITION
+CLASS z2ui5_cl_ajson_filter_lib DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC .
@@ -7,25 +7,25 @@ CLASS zcl_a2ui5_ajson_filter_lib DEFINITION
 
     CLASS-METHODS create_empty_filter
       RETURNING
-        VALUE(ri_filter) TYPE REF TO zif_a2ui5_ajson_filter
+        VALUE(ri_filter) TYPE REF TO z2ui5_if_ajson_filter
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
     CLASS-METHODS create_path_filter
       IMPORTING
         !it_skip_paths TYPE string_table OPTIONAL
         !iv_skip_paths TYPE string OPTIONAL
         !iv_pattern_search TYPE abap_bool DEFAULT abap_false
       RETURNING
-        VALUE(ri_filter) TYPE REF TO zif_a2ui5_ajson_filter
+        VALUE(ri_filter) TYPE REF TO z2ui5_if_ajson_filter
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
     CLASS-METHODS create_and_filter
       IMPORTING
-        !it_filters TYPE zif_a2ui5_ajson_filter=>ty_filter_tab
+        !it_filters TYPE z2ui5_if_ajson_filter=>ty_filter_tab
       RETURNING
-        VALUE(ri_filter) TYPE REF TO zif_a2ui5_ajson_filter
+        VALUE(ri_filter) TYPE REF TO z2ui5_if_ajson_filter
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -33,7 +33,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_a2ui5_ajson_filter_lib IMPLEMENTATION.
+CLASS z2ui5_cl_ajson_filter_lib IMPLEMENTATION.
 
 
   METHOD create_and_filter.

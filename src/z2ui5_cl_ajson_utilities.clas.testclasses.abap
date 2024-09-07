@@ -5,14 +5,14 @@
 CLASS lcl_nodes_helper DEFINITION FINAL.
   PUBLIC SECTION.
 
-    DATA mt_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt READ-ONLY.
+    DATA mt_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt READ-ONLY.
 
     METHODS add
       IMPORTING
         iv_str TYPE string.
     METHODS sorted
       RETURNING
-        VALUE(rt_nodes) TYPE zif_a2ui5_ajson_types=>ty_nodes_ts.
+        VALUE(rt_nodes) TYPE z2ui5_if_ajson_types=>ty_nodes_ts.
 
 ENDCLASS.
 
@@ -126,12 +126,12 @@ CLASS ltcl_json_utils DEFINITION
 
   PRIVATE SECTION.
 
-    METHODS json_diff FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS json_diff_types FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS json_diff_arrays FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS json_merge FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS json_sort FOR TESTING RAISING zcx_a2ui5_ajson_error.
-    METHODS is_equal FOR TESTING RAISING zcx_a2ui5_ajson_error.
+    METHODS json_diff FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS json_diff_types FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS json_diff_arrays FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS json_merge FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS json_sort FOR TESTING RAISING z2ui5_cx_ajson_error.
+    METHODS is_equal FOR TESTING RAISING z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -141,10 +141,10 @@ CLASS ltcl_json_utils IMPLEMENTATION.
 
     DATA:
       lv_json       TYPE string,
-      lo_util       TYPE REF TO zcl_a2ui5_ajson_utilities,
-      lo_insert     TYPE REF TO zif_a2ui5_ajson,
-      lo_delete     TYPE REF TO zif_a2ui5_ajson,
-      lo_change     TYPE REF TO zif_a2ui5_ajson,
+      lo_util       TYPE REF TO z2ui5_cl_ajson_utilities,
+      lo_insert     TYPE REF TO z2ui5_if_ajson,
+      lo_delete     TYPE REF TO z2ui5_if_ajson,
+      lo_change     TYPE REF TO z2ui5_if_ajson,
       lo_insert_exp TYPE REF TO lcl_nodes_helper,
       lo_delete_exp TYPE REF TO lcl_nodes_helper,
       lo_change_exp TYPE REF TO lcl_nodes_helper.
@@ -248,10 +248,10 @@ CLASS ltcl_json_utils IMPLEMENTATION.
     DATA:
       lv_json_a     TYPE string,
       lv_json_b     TYPE string,
-      lo_util       TYPE REF TO zcl_a2ui5_ajson_utilities,
-      lo_insert     TYPE REF TO zif_a2ui5_ajson,
-      lo_delete     TYPE REF TO zif_a2ui5_ajson,
-      lo_change     TYPE REF TO zif_a2ui5_ajson,
+      lo_util       TYPE REF TO z2ui5_cl_ajson_utilities,
+      lo_insert     TYPE REF TO z2ui5_if_ajson,
+      lo_delete     TYPE REF TO z2ui5_if_ajson,
+      lo_change     TYPE REF TO z2ui5_if_ajson,
       lo_insert_exp TYPE REF TO lcl_nodes_helper,
       lo_delete_exp TYPE REF TO lcl_nodes_helper.
 
@@ -338,10 +338,10 @@ CLASS ltcl_json_utils IMPLEMENTATION.
     DATA:
       lv_json_a     TYPE string,
       lv_json_b     TYPE string,
-      lo_util       TYPE REF TO zcl_a2ui5_ajson_utilities,
-      lo_insert     TYPE REF TO zif_a2ui5_ajson,
-      lo_delete     TYPE REF TO zif_a2ui5_ajson,
-      lo_change     TYPE REF TO zif_a2ui5_ajson,
+      lo_util       TYPE REF TO z2ui5_cl_ajson_utilities,
+      lo_insert     TYPE REF TO z2ui5_if_ajson,
+      lo_delete     TYPE REF TO z2ui5_if_ajson,
+      lo_change     TYPE REF TO z2ui5_if_ajson,
       lo_insert_exp TYPE REF TO lcl_nodes_helper.
 
     " Add empty array
@@ -417,8 +417,8 @@ CLASS ltcl_json_utils IMPLEMENTATION.
     DATA:
       lv_json_a    TYPE string,
       lv_json_b    TYPE string,
-      lo_util      TYPE REF TO zcl_a2ui5_ajson_utilities,
-      lo_merge     TYPE REF TO zif_a2ui5_ajson,
+      lo_util      TYPE REF TO z2ui5_cl_ajson_utilities,
+      lo_merge     TYPE REF TO z2ui5_if_ajson,
       lo_merge_exp TYPE REF TO lcl_nodes_helper.
 
     " Merge new value of b into a
@@ -469,7 +469,7 @@ CLASS ltcl_json_utils IMPLEMENTATION.
 
     DATA:
       lv_json       TYPE string,
-      lo_util       TYPE REF TO zcl_a2ui5_ajson_utilities,
+      lo_util       TYPE REF TO z2ui5_cl_ajson_utilities,
       lv_sorted     TYPE string,
       lv_sorted_exp TYPE string.
 
@@ -514,31 +514,31 @@ CLASS ltcl_json_utils IMPLEMENTATION.
   METHOD is_equal.
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson_utilities=>new( )->is_equal(
-        ii_json_a = zcl_a2ui5_ajson=>parse( '{"a":1,"b":2}' )
-        ii_json_b = zcl_a2ui5_ajson=>parse( '{"a":1,"b":2}' ) )
+      act = z2ui5_cl_ajson_utilities=>new( )->is_equal(
+        ii_json_a = z2ui5_cl_ajson=>parse( '{"a":1,"b":2}' )
+        ii_json_b = z2ui5_cl_ajson=>parse( '{"a":1,"b":2}' ) )
       exp = abap_true ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson_utilities=>new( )->is_equal(
+      act = z2ui5_cl_ajson_utilities=>new( )->is_equal(
         iv_json_a = '{"a":1,"b":2}'
         iv_json_b = '{"a":1,"b":2}' )
       exp = abap_true ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson_utilities=>new( )->is_equal(
+      act = z2ui5_cl_ajson_utilities=>new( )->is_equal(
         iv_json_a = '{"a":1,"b":2}'
         iv_json_b = '{"a":1,"b":3}' )
       exp = abap_false ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson_utilities=>new( )->is_equal(
+      act = z2ui5_cl_ajson_utilities=>new( )->is_equal(
         iv_json_a = '{"a":1,"b":2}'
         iv_json_b = '{"a":1,"b":2,"c":3}' )
       exp = abap_false ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = zcl_a2ui5_ajson_utilities=>new( )->is_equal(
+      act = z2ui5_cl_ajson_utilities=>new( )->is_equal(
         iv_json_a = '{"a":1,"b":2,"c":3}'
         iv_json_b = '{"a":1,"b":2}' )
       exp = abap_false ).

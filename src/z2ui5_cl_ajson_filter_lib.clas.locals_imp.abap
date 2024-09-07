@@ -4,15 +4,15 @@
 
 CLASS lcl_empty_filter DEFINITION FINAL.
   PUBLIC SECTION.
-    INTERFACES zif_a2ui5_ajson_filter.
+    INTERFACES z2ui5_if_ajson_filter.
 ENDCLASS.
 
 CLASS lcl_empty_filter IMPLEMENTATION.
-  METHOD zif_a2ui5_ajson_filter~keep_node.
+  METHOD z2ui5_if_ajson_filter~keep_node.
 
     rv_keep = boolc(
-      ( iv_visit = zif_a2ui5_ajson_filter=>visit_type-value AND is_node-value IS NOT INITIAL ) OR
-      ( iv_visit <> zif_a2ui5_ajson_filter=>visit_type-value AND is_node-children > 0 ) ).
+      ( iv_visit = z2ui5_if_ajson_filter=>visit_type-value AND is_node-value IS NOT INITIAL ) OR
+      ( iv_visit <> z2ui5_if_ajson_filter=>visit_type-value AND is_node-children > 0 ) ).
     " children = 0 on open for initially empty nodes and on close for filtered ones
 
   ENDMETHOD.
@@ -24,14 +24,14 @@ ENDCLASS.
 
 CLASS lcl_paths_filter DEFINITION FINAL.
   PUBLIC SECTION.
-    INTERFACES zif_a2ui5_ajson_filter.
+    INTERFACES z2ui5_if_ajson_filter.
     METHODS constructor
       IMPORTING
         it_skip_paths TYPE string_table OPTIONAL
         iv_skip_paths TYPE string OPTIONAL
         iv_pattern_search TYPE abap_bool
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
   PRIVATE SECTION.
     DATA mt_skip_paths TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
     DATA mv_pattern_search TYPE abap_bool.
@@ -39,7 +39,7 @@ ENDCLASS.
 
 CLASS lcl_paths_filter IMPLEMENTATION.
 
-  METHOD zif_a2ui5_ajson_filter~keep_node.
+  METHOD z2ui5_if_ajson_filter~keep_node.
 
     DATA lv_full_path TYPE string.
     FIELD-SYMBOLS <p> LIKE LINE OF mt_skip_paths.
@@ -68,7 +68,7 @@ CLASS lcl_paths_filter IMPLEMENTATION.
     FIELD-SYMBOLS <s> TYPE string.
 
     IF boolc( iv_skip_paths IS INITIAL ) = boolc( it_skip_paths IS INITIAL ). " XOR
-      zcx_a2ui5_ajson_error=>raise( 'no filter path specified' ).
+      z2ui5_cx_ajson_error=>raise( 'no filter path specified' ).
     ENDIF.
 
     LOOP AT it_skip_paths INTO lv_s.
@@ -103,19 +103,19 @@ ENDCLASS.
 
 CLASS lcl_and_filter DEFINITION FINAL.
   PUBLIC SECTION.
-    INTERFACES zif_a2ui5_ajson_filter.
+    INTERFACES z2ui5_if_ajson_filter.
     METHODS constructor
       IMPORTING
-        it_filters TYPE zif_a2ui5_ajson_filter=>ty_filter_tab
+        it_filters TYPE z2ui5_if_ajson_filter=>ty_filter_tab
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
   PRIVATE SECTION.
-    DATA mt_filters TYPE zif_a2ui5_ajson_filter=>ty_filter_tab.
+    DATA mt_filters TYPE z2ui5_if_ajson_filter=>ty_filter_tab.
 ENDCLASS.
 
 CLASS lcl_and_filter IMPLEMENTATION.
 
-  METHOD zif_a2ui5_ajson_filter~keep_node.
+  METHOD z2ui5_if_ajson_filter~keep_node.
 
     DATA li_filter LIKE LINE OF mt_filters.
 

@@ -66,7 +66,7 @@ CLASS lcl_utils DEFINITION FINAL.
       IMPORTING
         iv_path TYPE string
       RETURNING
-        VALUE(rv_path_name) TYPE zif_a2ui5_ajson_types=>ty_path_name.
+        VALUE(rv_path_name) TYPE z2ui5_if_ajson_types=>ty_path_name.
     CLASS-METHODS validate_array_index
       IMPORTING
         iv_path TYPE string
@@ -74,7 +74,7 @@ CLASS lcl_utils DEFINITION FINAL.
       RETURNING
         VALUE(rv_index) TYPE i
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
     CLASS-METHODS string_to_xstring_utf8
       IMPORTING
         iv_str TYPE string
@@ -119,11 +119,11 @@ CLASS lcl_utils IMPLEMENTATION.
   METHOD validate_array_index.
 
     IF NOT iv_index CO '0123456789'.
-      zcx_a2ui5_ajson_error=>raise( |Cannot add non-numeric key [{ iv_index }] to array [{ iv_path }]| ).
+      z2ui5_cx_ajson_error=>raise( |Cannot add non-numeric key [{ iv_index }] to array [{ iv_path }]| ).
     ENDIF.
     rv_index = iv_index.
     IF rv_index = 0.
-      zcx_a2ui5_ajson_error=>raise( |Cannot add zero key to array [{ iv_path }]| ).
+      z2ui5_cx_ajson_error=>raise( |Cannot add zero key to array [{ iv_path }]| ).
     ENDIF.
 
   ENDMETHOD.
@@ -191,14 +191,14 @@ CLASS lcl_json_parser DEFINITION FINAL.
         iv_json TYPE string
         iv_keep_item_order TYPE abap_bool DEFAULT abap_false
       RETURNING
-        VALUE(rt_json_tree) TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        VALUE(rt_json_tree) TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
   PRIVATE SECTION.
 
     TYPES:
-      ty_stack_tt TYPE STANDARD TABLE OF REF TO zif_a2ui5_ajson_types=>ty_node.
+      ty_stack_tt TYPE STANDARD TABLE OF REF TO z2ui5_if_ajson_types=>ty_node.
 
     DATA mt_stack TYPE ty_stack_tt.
     DATA mv_stack_path TYPE string.
@@ -208,15 +208,15 @@ CLASS lcl_json_parser DEFINITION FINAL.
       IMPORTING
         iv_error TYPE string
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS _parse
       IMPORTING
         iv_json TYPE string
       RETURNING
-        VALUE(rt_json_tree) TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        VALUE(rt_json_tree) TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error cx_dynamic_check. " cx_sxml_error is not released on Steampunk #153
+        z2ui5_cx_ajson_error cx_dynamic_check. " cx_sxml_error is not released on Steampunk #153
 
     METHODS _get_location
       IMPORTING
@@ -245,11 +245,11 @@ CLASS lcl_json_parser IMPLEMENTATION.
         lv_location = _get_location(
         iv_json   = iv_json
         iv_offset = lx_sxml_parse->xml_offset ).
-        zcx_a2ui5_ajson_error=>raise(
+        z2ui5_cx_ajson_error=>raise(
         iv_msg      = |Json parsing error (SXML): { lx_sxml_parse->get_text( ) }|
         iv_location = lv_location ).
       CATCH cx_dynamic_check INTO lx_sxml. " cx_sxml_error
-        zcx_a2ui5_ajson_error=>raise(
+        z2ui5_cx_ajson_error=>raise(
         iv_msg      = |Json parsing error (SXML): { lx_sxml->get_text( ) }|
         iv_location = '@PARSER' ).
     ENDTRY.
@@ -389,7 +389,7 @@ CLASS lcl_json_parser IMPLEMENTATION.
 
   METHOD raise.
 
-    zcx_a2ui5_ajson_error=>raise(
+    z2ui5_cx_ajson_error=>raise(
       iv_location = mv_stack_path
       iv_msg      = |JSON PARSER: { iv_error } @ { mv_stack_path }| ).
 
@@ -406,13 +406,13 @@ CLASS lcl_json_serializer DEFINITION FINAL CREATE PRIVATE.
 
     CLASS-METHODS stringify
       IMPORTING
-        it_json_tree TYPE zif_a2ui5_ajson_types=>ty_nodes_ts
+        it_json_tree TYPE z2ui5_if_ajson_types=>ty_nodes_ts
         iv_indent TYPE i DEFAULT 0
         iv_keep_item_order TYPE abap_bool DEFAULT abap_false
       RETURNING
         VALUE(rv_json_string) TYPE string
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     CLASS-METHODS class_constructor.
 
@@ -420,7 +420,7 @@ CLASS lcl_json_serializer DEFINITION FINAL CREATE PRIVATE.
 
     CLASS-DATA gv_comma_with_lf TYPE string.
 
-    DATA mt_json_tree TYPE zif_a2ui5_ajson_types=>ty_nodes_ts.
+    DATA mt_json_tree TYPE z2ui5_if_ajson_types=>ty_nodes_ts.
     DATA mv_keep_item_order TYPE abap_bool.
     DATA mt_buffer TYPE string_table.
     DATA mv_indent_step TYPE i.
@@ -436,20 +436,20 @@ CLASS lcl_json_serializer DEFINITION FINAL CREATE PRIVATE.
       RETURNING
         VALUE(rv_json_string) TYPE string
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS stringify_node
       IMPORTING
-        is_node TYPE zif_a2ui5_ajson_types=>ty_node
+        is_node TYPE z2ui5_if_ajson_types=>ty_node
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS stringify_set
       IMPORTING
         iv_parent_path TYPE string
         iv_array TYPE abap_bool
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -507,24 +507,24 @@ CLASS lcl_json_serializer IMPLEMENTATION.
     ENDIF.
 
     CASE is_node-type.
-      WHEN zif_a2ui5_ajson_types=>node_type-array.
+      WHEN z2ui5_if_ajson_types=>node_type-array.
         lv_item = lv_item && '['.
-      WHEN zif_a2ui5_ajson_types=>node_type-object.
+      WHEN z2ui5_if_ajson_types=>node_type-object.
         lv_item = lv_item && '{'.
-      WHEN zif_a2ui5_ajson_types=>node_type-string.
+      WHEN z2ui5_if_ajson_types=>node_type-string.
         lv_item = lv_item && |"{ escape_string( is_node-value ) }"|.
-      WHEN zif_a2ui5_ajson_types=>node_type-boolean OR zif_a2ui5_ajson_types=>node_type-number.
+      WHEN z2ui5_if_ajson_types=>node_type-boolean OR z2ui5_if_ajson_types=>node_type-number.
         lv_item = lv_item && is_node-value.
-      WHEN zif_a2ui5_ajson_types=>node_type-null.
+      WHEN z2ui5_if_ajson_types=>node_type-null.
         lv_item = lv_item && 'null'.
       WHEN OTHERS.
-        zcx_a2ui5_ajson_error=>raise(
+        z2ui5_cx_ajson_error=>raise(
           iv_msg = |Unexpected type [{ is_node-type }]|
           iv_location = is_node-path && is_node-name ).
     ENDCASE.
 
     IF mv_indent_step > 0
-      AND ( is_node-type = zif_a2ui5_ajson_types=>node_type-array OR is_node-type = zif_a2ui5_ajson_types=>node_type-object )
+      AND ( is_node-type = z2ui5_if_ajson_types=>node_type-array OR is_node-type = z2ui5_if_ajson_types=>node_type-object )
       AND is_node-children > 0.
       mv_level = mv_level + 1.
       lv_item = lv_item && cl_abap_char_utilities=>newline.
@@ -534,21 +534,21 @@ CLASS lcl_json_serializer IMPLEMENTATION.
 
     " finish complex item
 
-    IF is_node-type = zif_a2ui5_ajson_types=>node_type-array OR is_node-type = zif_a2ui5_ajson_types=>node_type-object.
+    IF is_node-type = z2ui5_if_ajson_types=>node_type-array OR is_node-type = z2ui5_if_ajson_types=>node_type-object.
       DATA lv_children_path TYPE string.
       DATA lv_tail TYPE string.
 
       lv_children_path = is_node-path && is_node-name && '/'. " for root: path = '' and name = '', so result is '/'
 
       CASE is_node-type.
-        WHEN zif_a2ui5_ajson_types=>node_type-array.
+        WHEN z2ui5_if_ajson_types=>node_type-array.
           IF is_node-children > 0.
             stringify_set(
               iv_parent_path = lv_children_path
               iv_array       = abap_true ).
           ENDIF.
           lv_tail = ']'.
-        WHEN zif_a2ui5_ajson_types=>node_type-object.
+        WHEN z2ui5_if_ajson_types=>node_type-object.
           IF is_node-children > 0.
             stringify_set(
               iv_parent_path = lv_children_path
@@ -646,39 +646,39 @@ CLASS lcl_json_to_abap DEFINITION FINAL.
     METHODS constructor
       IMPORTING
         !iv_corresponding  TYPE abap_bool DEFAULT abap_false
-        !ii_custom_mapping TYPE REF TO zif_a2ui5_ajson_mapping OPTIONAL.
+        !ii_custom_mapping TYPE REF TO z2ui5_if_ajson_mapping OPTIONAL.
 
     METHODS to_abap
       IMPORTING
-        it_nodes     TYPE zif_a2ui5_ajson_types=>ty_nodes_ts
+        it_nodes     TYPE z2ui5_if_ajson_types=>ty_nodes_ts
       CHANGING
         c_container TYPE any
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS to_timestamp
       IMPORTING
-        iv_value         TYPE zif_a2ui5_ajson_types=>ty_node-value
+        iv_value         TYPE z2ui5_if_ajson_types=>ty_node-value
       RETURNING
         VALUE(rv_result) TYPE timestamp
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS to_date
       IMPORTING
-        iv_value         TYPE zif_a2ui5_ajson_types=>ty_node-value
+        iv_value         TYPE z2ui5_if_ajson_types=>ty_node-value
       RETURNING
         VALUE(rv_result) TYPE d
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS to_time
       IMPORTING
-        iv_value         TYPE zif_a2ui5_ajson_types=>ty_node-value
+        iv_value         TYPE z2ui5_if_ajson_types=>ty_node-value
       RETURNING
         VALUE(rv_result) TYPE t
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
   PRIVATE SECTION.
 
@@ -692,8 +692,8 @@ CLASS lcl_json_to_abap DEFINITION FINAL.
       END OF ty_type_cache.
     DATA mt_node_type_cache TYPE HASHED TABLE OF ty_type_cache WITH UNIQUE KEY type_path.
 
-    DATA mr_nodes TYPE REF TO zif_a2ui5_ajson_types=>ty_nodes_ts.
-    DATA mi_custom_mapping TYPE REF TO zif_a2ui5_ajson_mapping.
+    DATA mr_nodes TYPE REF TO z2ui5_if_ajson_types=>ty_nodes_ts.
+    DATA mi_custom_mapping TYPE REF TO z2ui5_if_ajson_mapping.
     DATA mv_corresponding TYPE abap_bool.
 
     METHODS any_to_abap
@@ -702,26 +702,26 @@ CLASS lcl_json_to_abap DEFINITION FINAL.
         is_parent_type TYPE ty_type_cache OPTIONAL
         i_container_ref TYPE REF TO data
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS value_to_abap
       IMPORTING
-        is_node      TYPE zif_a2ui5_ajson_types=>ty_node
+        is_node      TYPE z2ui5_if_ajson_types=>ty_node
         is_node_type TYPE ty_type_cache
         i_container_ref TYPE REF TO data
       RAISING
-        zcx_a2ui5_ajson_error
+        z2ui5_cx_ajson_error
         cx_sy_conversion_no_number.
 
     METHODS get_node_type
       IMPORTING
-        is_node            TYPE zif_a2ui5_ajson_types=>ty_node OPTIONAL " Empty for root
+        is_node            TYPE z2ui5_if_ajson_types=>ty_node OPTIONAL " Empty for root
         is_parent_type     TYPE ty_type_cache OPTIONAL
         i_container_ref    TYPE REF TO data OPTIONAL
       RETURNING
         VALUE(rs_node_type) TYPE ty_type_cache
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -797,7 +797,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
               component_not_found = 4 ).
           IF sy-subrc <> 0.
             IF mv_corresponding = abap_false.
-              zcx_a2ui5_ajson_error=>raise( |Path not found| ).
+              z2ui5_cx_ajson_error=>raise( |Path not found| ).
             ELSE.
               CLEAR rs_node_type.
               RETURN.
@@ -808,7 +808,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
           rs_node_type-dd ?= cl_abap_typedescr=>describe_by_data_ref( i_container_ref ).
 
         WHEN OTHERS.
-          zcx_a2ui5_ajson_error=>raise( |Unexpected parent type| ).
+          z2ui5_cx_ajson_error=>raise( |Unexpected parent type| ).
       ENDCASE.
 
       rs_node_type-type_kind         = rs_node_type-dd->type_kind. " for caching and cleaner uninitialized access
@@ -828,11 +828,11 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
   METHOD any_to_abap.
 
     DATA ls_node_type LIKE LINE OF mt_node_type_cache.
-    DATA lx_ajson TYPE REF TO zcx_a2ui5_ajson_error.
+    DATA lx_ajson TYPE REF TO z2ui5_cx_ajson_error.
     DATA lx_root TYPE REF TO cx_root.
     DATA lr_target_field TYPE REF TO data.
 
-    FIELD-SYMBOLS <n> TYPE zif_a2ui5_ajson_types=>ty_node.
+    FIELD-SYMBOLS <n> TYPE z2ui5_if_ajson_types=>ty_node.
     FIELD-SYMBOLS <parent_stdtab> TYPE STANDARD TABLE.
     FIELD-SYMBOLS <parent_anytab> TYPE ANY TABLE.
     FIELD-SYMBOLS <parent_struc> TYPE any.
@@ -882,7 +882,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
           IF ls_node_type-type_kind = lif_kind=>data_ref OR
            ls_node_type-type_kind = lif_kind=>object_ref.
           " TODO maybe in future
-            zcx_a2ui5_ajson_error=>raise( 'Cannot assign to ref' ).
+            z2ui5_cx_ajson_error=>raise( 'Cannot assign to ref' ).
           ENDIF.
 
         " Find target field reference
@@ -890,7 +890,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
             WHEN lif_kind=>table.
               IF NOT ls_node_type-target_field_name CO '0123456789'.
               " Does not affect anything actually but for integrity
-                zcx_a2ui5_ajson_error=>raise( 'Need index to access tables' ).
+                z2ui5_cx_ajson_error=>raise( 'Need index to access tables' ).
               ENDIF.
 
               IF is_parent_type-tab_item_buf IS NOT BOUND. " Indirect hint that table was srt/hsh, see get_node_type
@@ -910,24 +910,24 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
               lr_target_field = i_container_ref.
 
             WHEN OTHERS.
-              zcx_a2ui5_ajson_error=>raise( 'Unexpected parent type' ).
+              z2ui5_cx_ajson_error=>raise( 'Unexpected parent type' ).
           ENDCASE.
 
         " Process value assignment
           CASE <n>-type.
-            WHEN zif_a2ui5_ajson_types=>node_type-object.
+            WHEN z2ui5_if_ajson_types=>node_type-object.
               IF ls_node_type-type_kind <> lif_kind=>struct_flat AND
                ls_node_type-type_kind <> lif_kind=>struct_deep.
-                zcx_a2ui5_ajson_error=>raise( 'Expected structure' ).
+                z2ui5_cx_ajson_error=>raise( 'Expected structure' ).
               ENDIF.
               any_to_abap(
               iv_path         = <n>-path && <n>-name && '/'
               is_parent_type  = ls_node_type
               i_container_ref = lr_target_field ).
 
-            WHEN zif_a2ui5_ajson_types=>node_type-array.
+            WHEN z2ui5_if_ajson_types=>node_type-array.
               IF NOT ls_node_type-type_kind = lif_kind=>table.
-                zcx_a2ui5_ajson_error=>raise( 'Expected table' ).
+                z2ui5_cx_ajson_error=>raise( 'Expected table' ).
               ENDIF.
               any_to_abap(
               iv_path         = <n>-path && <n>-name && '/'
@@ -945,26 +945,26 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
             TRY.
                 INSERT <tab_item> INTO TABLE <parent_anytab>.
                 IF sy-subrc <> 0.
-                  zcx_a2ui5_ajson_error=>raise( 'Duplicate insertion' ).
+                  z2ui5_cx_ajson_error=>raise( 'Duplicate insertion' ).
                 ENDIF.
               CATCH cx_sy_itab_duplicate_key.
-                zcx_a2ui5_ajson_error=>raise( 'Duplicate insertion' ).
+                z2ui5_cx_ajson_error=>raise( 'Duplicate insertion' ).
             ENDTRY.
           ENDIF.
 
         ENDLOOP.
 
-      CATCH zcx_a2ui5_ajson_error INTO lx_ajson.
+      CATCH z2ui5_cx_ajson_error INTO lx_ajson.
         IF lx_ajson->location IS INITIAL.
           lx_ajson->set_location( <n>-path && <n>-name ).
         ENDIF.
         RAISE EXCEPTION lx_ajson.
       CATCH cx_sy_conversion_no_number.
-        zcx_a2ui5_ajson_error=>raise(
+        z2ui5_cx_ajson_error=>raise(
         iv_msg = 'Source is not a number'
         iv_location = <n>-path && <n>-name ).
       CATCH cx_root INTO lx_root.
-        zcx_a2ui5_ajson_error=>raise(
+        z2ui5_cx_ajson_error=>raise(
         iv_msg = lx_root->get_text( )
         iv_location = <n>-path && <n>-name ).
     ENDTRY.
@@ -976,23 +976,23 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
     FIELD-SYMBOLS <container> TYPE any.
 
     IF is_node_type-type_kind CA lif_kind=>deep_targets.
-      zcx_a2ui5_ajson_error=>raise( |Unsupported target for value [{ is_node_type-type_kind }]| ).
+      z2ui5_cx_ajson_error=>raise( |Unsupported target for value [{ is_node_type-type_kind }]| ).
     ENDIF.
 
     ASSIGN i_container_ref->* TO <container>.
     ASSERT sy-subrc = 0.
 
     CASE is_node-type.
-      WHEN zif_a2ui5_ajson_types=>node_type-null.
+      WHEN z2ui5_if_ajson_types=>node_type-null.
         " Do nothing
-      WHEN zif_a2ui5_ajson_types=>node_type-boolean.
+      WHEN z2ui5_if_ajson_types=>node_type-boolean.
         " TODO: check type ?
         <container> = boolc( is_node-value = 'true' ).
-      WHEN zif_a2ui5_ajson_types=>node_type-number.
+      WHEN z2ui5_if_ajson_types=>node_type-number.
         " TODO: check type ?
         <container> = is_node-value.
 
-      WHEN zif_a2ui5_ajson_types=>node_type-string.
+      WHEN z2ui5_if_ajson_types=>node_type-string.
         " TODO: check type ?
         IF is_node-value IS NOT INITIAL.
           IF is_node_type-type_kind = lif_kind=>date.
@@ -1011,7 +1011,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
           <container> = is_node-value.
         ENDIF.
       WHEN OTHERS.
-        zcx_a2ui5_ajson_error=>raise( |Unexpected JSON type [{ is_node-type }]| ).
+        z2ui5_cx_ajson_error=>raise( |Unexpected JSON type [{ is_node-type }]| ).
     ENDCASE.
 
   ENDMETHOD.
@@ -1026,7 +1026,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
       IN iv_value
       SUBMATCHES lv_y lv_m lv_d.
     IF sy-subrc <> 0.
-      zcx_a2ui5_ajson_error=>raise( 'Unexpected date format' ).
+      z2ui5_cx_ajson_error=>raise( 'Unexpected date format' ).
     ENDIF.
     CONCATENATE lv_y lv_m lv_d INTO rv_result.
 
@@ -1077,7 +1077,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
           ls_timestamp-hour ls_timestamp-minute ls_timestamp-second.
 
       IF sy-subrc <> 0.
-        zcx_a2ui5_ajson_error=>raise( 'Unexpected timestamp format' ).
+        z2ui5_cx_ajson_error=>raise( 'Unexpected timestamp format' ).
       ENDIF.
 
     ENDIF.
@@ -1101,7 +1101,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
         ENDCASE.
 
       CATCH cx_parameter_invalid_range cx_parameter_invalid_type.
-        zcx_a2ui5_ajson_error=>raise( 'Unexpected error calculating timestamp' ).
+        z2ui5_cx_ajson_error=>raise( 'Unexpected error calculating timestamp' ).
     ENDTRY.
 
     IF lv_timestamp IS NOT INITIAL.
@@ -1124,7 +1124,7 @@ CLASS lcl_json_to_abap IMPLEMENTATION.
       IN iv_value
       SUBMATCHES lv_h lv_m lv_s.
     IF sy-subrc <> 0.
-      zcx_a2ui5_ajson_error=>raise( 'Unexpected time format' ).
+      z2ui5_cx_ajson_error=>raise( 'Unexpected time format' ).
     ENDIF.
     CONCATENATE lv_h lv_m lv_s INTO rv_result.
 
@@ -1142,29 +1142,29 @@ CLASS lcl_abap_to_json DEFINITION FINAL.
     CLASS-METHODS convert
       IMPORTING
         iv_data            TYPE any
-        is_prefix          TYPE zif_a2ui5_ajson_types=>ty_path_name OPTIONAL
+        is_prefix          TYPE z2ui5_if_ajson_types=>ty_path_name OPTIONAL
         iv_array_index     TYPE i DEFAULT 0
-        ii_custom_mapping  TYPE REF TO zif_a2ui5_ajson_mapping OPTIONAL
-        is_opts            TYPE zif_a2ui5_ajson=>ty_opts OPTIONAL
+        ii_custom_mapping  TYPE REF TO z2ui5_if_ajson_mapping OPTIONAL
+        is_opts            TYPE z2ui5_if_ajson=>ty_opts OPTIONAL
         iv_item_order      TYPE i DEFAULT 0
       RETURNING
-        VALUE(rt_nodes)   TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        VALUE(rt_nodes)   TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     CLASS-METHODS insert_with_type
       IMPORTING
         iv_data            TYPE any
-        iv_type            TYPE zif_a2ui5_ajson_types=>ty_node_type
-        is_prefix          TYPE zif_a2ui5_ajson_types=>ty_path_name OPTIONAL
+        iv_type            TYPE z2ui5_if_ajson_types=>ty_node_type
+        is_prefix          TYPE z2ui5_if_ajson_types=>ty_path_name OPTIONAL
         iv_array_index     TYPE i DEFAULT 0
-        ii_custom_mapping  TYPE REF TO zif_a2ui5_ajson_mapping OPTIONAL
-        is_opts            TYPE zif_a2ui5_ajson=>ty_opts OPTIONAL
+        ii_custom_mapping  TYPE REF TO z2ui5_if_ajson_mapping OPTIONAL
+        is_opts            TYPE z2ui5_if_ajson=>ty_opts OPTIONAL
         iv_item_order      TYPE i DEFAULT 0
       RETURNING
-        VALUE(rt_nodes)   TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        VALUE(rt_nodes)   TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     CLASS-METHODS format_date
       IMPORTING
@@ -1187,7 +1187,7 @@ CLASS lcl_abap_to_json DEFINITION FINAL.
   PRIVATE SECTION.
 
     CLASS-DATA gv_ajson_absolute_type_name TYPE string.
-    DATA mi_custom_mapping TYPE REF TO zif_a2ui5_ajson_mapping.
+    DATA mi_custom_mapping TYPE REF TO z2ui5_if_ajson_mapping.
     DATA mv_keep_item_order TYPE abap_bool.
     DATA mv_format_datetime TYPE abap_bool.
 
@@ -1195,84 +1195,84 @@ CLASS lcl_abap_to_json DEFINITION FINAL.
       IMPORTING
         iv_data TYPE any
         io_type TYPE REF TO cl_abap_typedescr
-        is_prefix TYPE zif_a2ui5_ajson_types=>ty_path_name
+        is_prefix TYPE z2ui5_if_ajson_types=>ty_path_name
         iv_index TYPE i DEFAULT 0
         iv_item_order TYPE i DEFAULT 0
       CHANGING
-        ct_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        ct_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS convert_ajson
       IMPORTING
-        io_json TYPE REF TO zif_a2ui5_ajson
-        is_prefix TYPE zif_a2ui5_ajson_types=>ty_path_name
+        io_json TYPE REF TO z2ui5_if_ajson
+        is_prefix TYPE z2ui5_if_ajson_types=>ty_path_name
         iv_index TYPE i DEFAULT 0
         iv_item_order TYPE i DEFAULT 0
       CHANGING
-        ct_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        ct_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS convert_value
       IMPORTING
         iv_data TYPE any
         io_type TYPE REF TO cl_abap_typedescr
-        is_prefix TYPE zif_a2ui5_ajson_types=>ty_path_name
+        is_prefix TYPE z2ui5_if_ajson_types=>ty_path_name
         iv_index TYPE i DEFAULT 0
         iv_item_order TYPE i DEFAULT 0
       CHANGING
-        ct_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        ct_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS convert_ref
       IMPORTING
         iv_data TYPE any
-        is_prefix TYPE zif_a2ui5_ajson_types=>ty_path_name
+        is_prefix TYPE z2ui5_if_ajson_types=>ty_path_name
         iv_index TYPE i DEFAULT 0
         iv_item_order TYPE i DEFAULT 0
       CHANGING
-        ct_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        ct_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS convert_struc
       IMPORTING
         iv_data TYPE any
         io_type TYPE REF TO cl_abap_typedescr
-        is_prefix TYPE zif_a2ui5_ajson_types=>ty_path_name
+        is_prefix TYPE z2ui5_if_ajson_types=>ty_path_name
         iv_index TYPE i DEFAULT 0
         iv_item_order TYPE i DEFAULT 0
       CHANGING
-        ct_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        ct_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS convert_table
       IMPORTING
         iv_data TYPE any
         io_type TYPE REF TO cl_abap_typedescr
-        is_prefix TYPE zif_a2ui5_ajson_types=>ty_path_name
+        is_prefix TYPE z2ui5_if_ajson_types=>ty_path_name
         iv_index TYPE i DEFAULT 0
         iv_item_order TYPE i DEFAULT 0
       CHANGING
-        ct_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        ct_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
     METHODS insert_value_with_type
       IMPORTING
         iv_data TYPE any
-        iv_type TYPE zif_a2ui5_ajson_types=>ty_node_type
+        iv_type TYPE z2ui5_if_ajson_types=>ty_node_type
         io_type TYPE REF TO cl_abap_typedescr
-        is_prefix TYPE zif_a2ui5_ajson_types=>ty_path_name
+        is_prefix TYPE z2ui5_if_ajson_types=>ty_path_name
         iv_index TYPE i DEFAULT 0
         iv_item_order TYPE i DEFAULT 0
       CHANGING
-        ct_nodes TYPE zif_a2ui5_ajson_types=>ty_nodes_tt
+        ct_nodes TYPE z2ui5_if_ajson_types=>ty_nodes_tt
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -1280,7 +1280,7 @@ CLASS lcl_abap_to_json IMPLEMENTATION.
 
   METHOD class_constructor.
 
-    DATA lo_dummy TYPE REF TO zcl_a2ui5_ajson.
+    DATA lo_dummy TYPE REF TO z2ui5_cl_ajson.
     DATA lo_type TYPE REF TO cl_abap_refdescr.
     lo_type ?= cl_abap_typedescr=>describe_by_data( lo_dummy ).
     gv_ajson_absolute_type_name = lo_type->get_referenced_type( )->absolute_name.
@@ -1372,7 +1372,7 @@ CLASS lcl_abap_to_json IMPLEMENTATION.
             CHANGING
               ct_nodes = ct_nodes ).
         ELSE.
-          zcx_a2ui5_ajson_error=>raise( |Unsupported type [{ io_type->type_kind
+          z2ui5_cx_ajson_error=>raise( |Unsupported type [{ io_type->type_kind
             }] @{ is_prefix-path && is_prefix-name }| ).
         ENDIF.
 
@@ -1452,7 +1452,7 @@ CLASS lcl_abap_to_json IMPLEMENTATION.
         OR io_type->absolute_name = '\TYPE=XSDBOOLEAN'
         OR io_type->absolute_name = '\TYPE=FLAG'
         OR io_type->absolute_name = '\TYPE=XFELD'.
-      ls_node-type = zif_a2ui5_ajson_types=>node_type-boolean.
+      ls_node-type = z2ui5_if_ajson_types=>node_type-boolean.
       IF iv_data IS NOT INITIAL.
         ls_node-value = 'true'.
       ELSE.
@@ -1460,36 +1460,36 @@ CLASS lcl_abap_to_json IMPLEMENTATION.
       ENDIF.
     ELSEIF io_type->absolute_name = '\TYPE=TIMESTAMP'.
       IF mv_format_datetime = abap_true.
-        ls_node-type  = zif_a2ui5_ajson_types=>node_type-string.
+        ls_node-type  = z2ui5_if_ajson_types=>node_type-string.
         ls_node-value = format_timestamp( iv_data ).
       ELSE.
-        ls_node-type  = zif_a2ui5_ajson_types=>node_type-number.
+        ls_node-type  = z2ui5_if_ajson_types=>node_type-number.
         ls_node-value = |{ iv_data }|.
       ENDIF.
     ELSEIF io_type->type_kind CO lif_kind=>texts OR
            io_type->type_kind CO lif_kind=>binary OR
            io_type->type_kind CO lif_kind=>enum.
-      ls_node-type = zif_a2ui5_ajson_types=>node_type-string.
+      ls_node-type = z2ui5_if_ajson_types=>node_type-string.
       ls_node-value = |{ iv_data }|.
     ELSEIF io_type->type_kind = lif_kind=>date.
-      ls_node-type = zif_a2ui5_ajson_types=>node_type-string.
+      ls_node-type = z2ui5_if_ajson_types=>node_type-string.
       IF mv_format_datetime = abap_true.
         ls_node-value = format_date( iv_data ).
       ELSE.
         ls_node-value = |{ iv_data }|.
       ENDIF.
     ELSEIF io_type->type_kind = lif_kind=>time.
-      ls_node-type = zif_a2ui5_ajson_types=>node_type-string.
+      ls_node-type = z2ui5_if_ajson_types=>node_type-string.
       IF mv_format_datetime = abap_true.
         ls_node-value = format_time( iv_data ).
       ELSE.
         ls_node-value = |{ iv_data }|.
       ENDIF.
     ELSEIF io_type->type_kind CO lif_kind=>numeric.
-      ls_node-type = zif_a2ui5_ajson_types=>node_type-number.
+      ls_node-type = z2ui5_if_ajson_types=>node_type-number.
       ls_node-value = |{ iv_data }|.
     ELSE.
-      zcx_a2ui5_ajson_error=>raise( |Unexpected elementary type [{
+      z2ui5_cx_ajson_error=>raise( |Unexpected elementary type [{
         io_type->type_kind }] @{ is_prefix-path && is_prefix-name }| ).
     ENDIF.
 
@@ -1517,11 +1517,11 @@ CLASS lcl_abap_to_json IMPLEMENTATION.
     ENDIF.
 
     IF iv_data IS INITIAL.
-      ls_node-type  = zif_a2ui5_ajson_types=>node_type-null.
+      ls_node-type  = z2ui5_if_ajson_types=>node_type-null.
       ls_node-value = 'null'.
     ELSE.
       " TODO support data references
-      zcx_a2ui5_ajson_error=>raise( |Unexpected reference @{ is_prefix-path && is_prefix-name }| ).
+      z2ui5_cx_ajson_error=>raise( |Unexpected reference @{ is_prefix-path && is_prefix-name }| ).
     ENDIF.
 
     APPEND ls_node TO ct_nodes.
@@ -1545,7 +1545,7 @@ CLASS lcl_abap_to_json IMPLEMENTATION.
 
     ls_root-path  = is_prefix-path.
     ls_root-name  = is_prefix-name.
-    ls_root-type  = zif_a2ui5_ajson_types=>node_type-object.
+    ls_root-type  = z2ui5_if_ajson_types=>node_type-object.
     ls_root-index = iv_index.
 
     IF mi_custom_mapping IS BOUND.
@@ -1624,7 +1624,7 @@ CLASS lcl_abap_to_json IMPLEMENTATION.
 
     ls_root-path  = is_prefix-path.
     ls_root-name  = is_prefix-name.
-    ls_root-type  = zif_a2ui5_ajson_types=>node_type-array.
+    ls_root-type  = z2ui5_if_ajson_types=>node_type-array.
     ls_root-index = iv_index.
     ls_root-order = iv_item_order.
 
@@ -1701,22 +1701,22 @@ CLASS lcl_abap_to_json IMPLEMENTATION.
     IF io_type->type_kind CO lif_kind=>texts OR
        io_type->type_kind CO lif_kind=>date OR
        io_type->type_kind CO lif_kind=>time.
-      IF iv_type = zif_a2ui5_ajson_types=>node_type-boolean AND iv_data <> 'true' AND iv_data <> 'false'.
-        zcx_a2ui5_ajson_error=>raise( |Unexpected boolean value [{ iv_data }] @{ lv_prefix }| ).
-      ELSEIF iv_type = zif_a2ui5_ajson_types=>node_type-null AND iv_data IS NOT INITIAL.
-        zcx_a2ui5_ajson_error=>raise( |Unexpected null value [{ iv_data }] @{ lv_prefix }| ).
-      ELSEIF iv_type = zif_a2ui5_ajson_types=>node_type-number AND iv_data CN '0123456789. E+-'.
-        zcx_a2ui5_ajson_error=>raise( |Unexpected numeric value [{ iv_data }] @{ lv_prefix }| ).
-      ELSEIF iv_type <> zif_a2ui5_ajson_types=>node_type-string AND iv_type <> zif_a2ui5_ajson_types=>node_type-boolean
-        AND iv_type <> zif_a2ui5_ajson_types=>node_type-null AND iv_type <> zif_a2ui5_ajson_types=>node_type-number.
-        zcx_a2ui5_ajson_error=>raise( |Unexpected type for value [{ iv_type },{ iv_data }] @{ lv_prefix }| ).
+      IF iv_type = z2ui5_if_ajson_types=>node_type-boolean AND iv_data <> 'true' AND iv_data <> 'false'.
+        z2ui5_cx_ajson_error=>raise( |Unexpected boolean value [{ iv_data }] @{ lv_prefix }| ).
+      ELSEIF iv_type = z2ui5_if_ajson_types=>node_type-null AND iv_data IS NOT INITIAL.
+        z2ui5_cx_ajson_error=>raise( |Unexpected null value [{ iv_data }] @{ lv_prefix }| ).
+      ELSEIF iv_type = z2ui5_if_ajson_types=>node_type-number AND iv_data CN '0123456789. E+-'.
+        z2ui5_cx_ajson_error=>raise( |Unexpected numeric value [{ iv_data }] @{ lv_prefix }| ).
+      ELSEIF iv_type <> z2ui5_if_ajson_types=>node_type-string AND iv_type <> z2ui5_if_ajson_types=>node_type-boolean
+        AND iv_type <> z2ui5_if_ajson_types=>node_type-null AND iv_type <> z2ui5_if_ajson_types=>node_type-number.
+        z2ui5_cx_ajson_error=>raise( |Unexpected type for value [{ iv_type },{ iv_data }] @{ lv_prefix }| ).
       ENDIF.
     ELSEIF io_type->type_kind CO lif_kind=>numeric.
-      IF iv_type <> zif_a2ui5_ajson_types=>node_type-number.
-        zcx_a2ui5_ajson_error=>raise( |Unexpected value for numeric [{ iv_data }] @{ lv_prefix }| ).
+      IF iv_type <> z2ui5_if_ajson_types=>node_type-number.
+        z2ui5_cx_ajson_error=>raise( |Unexpected value for numeric [{ iv_data }] @{ lv_prefix }| ).
       ENDIF.
     ELSE.
-      zcx_a2ui5_ajson_error=>raise( |Unexpected type [{ io_type->type_kind }] @{ lv_prefix }| ).
+      z2ui5_cx_ajson_error=>raise( |Unexpected type [{ io_type->type_kind }] @{ lv_prefix }| ).
     ENDIF.
 
     ls_node-path  = is_prefix-path.
@@ -1749,11 +1749,11 @@ ENDCLASS.
 INTERFACE lif_mutator_runner.
   METHODS run
     IMPORTING
-      it_source_tree TYPE zif_a2ui5_ajson_types=>ty_nodes_ts
+      it_source_tree TYPE z2ui5_if_ajson_types=>ty_nodes_ts
     EXPORTING
-      et_dest_tree TYPE zif_a2ui5_ajson_types=>ty_nodes_ts
+      et_dest_tree TYPE z2ui5_if_ajson_types=>ty_nodes_ts
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 ENDINTERFACE.
 
 **********************************************************************
@@ -1765,25 +1765,25 @@ CLASS lcl_filter_runner DEFINITION FINAL.
     INTERFACES lif_mutator_runner.
     CLASS-METHODS new
       IMPORTING
-        ii_filter TYPE REF TO zif_a2ui5_ajson_filter
+        ii_filter TYPE REF TO z2ui5_if_ajson_filter
       RETURNING
         VALUE(ro_instance) TYPE REF TO lcl_filter_runner.
     METHODS constructor
       IMPORTING
-        ii_filter TYPE REF TO zif_a2ui5_ajson_filter.
+        ii_filter TYPE REF TO z2ui5_if_ajson_filter.
 
   PRIVATE SECTION.
-    DATA mi_filter TYPE REF TO zif_a2ui5_ajson_filter.
-    DATA mr_source_tree TYPE REF TO zif_a2ui5_ajson_types=>ty_nodes_ts.
-    DATA mr_dest_tree TYPE REF TO zif_a2ui5_ajson_types=>ty_nodes_ts.
+    DATA mi_filter TYPE REF TO z2ui5_if_ajson_filter.
+    DATA mr_source_tree TYPE REF TO z2ui5_if_ajson_types=>ty_nodes_ts.
+    DATA mr_dest_tree TYPE REF TO z2ui5_if_ajson_types=>ty_nodes_ts.
 
     METHODS walk
       IMPORTING
         iv_path TYPE string
       CHANGING
-        cs_parent TYPE zif_a2ui5_ajson_types=>ty_node OPTIONAL
+        cs_parent TYPE z2ui5_if_ajson_types=>ty_node OPTIONAL
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -1810,27 +1810,27 @@ CLASS lcl_filter_runner IMPLEMENTATION.
 
   METHOD walk.
 
-    DATA ls_node TYPE zif_a2ui5_ajson_types=>ty_node.
+    DATA ls_node TYPE z2ui5_if_ajson_types=>ty_node.
     DATA lv_tab_key TYPE string.
 
-    IF cs_parent-type = zif_a2ui5_ajson_types=>node_type-array.
+    IF cs_parent-type = z2ui5_if_ajson_types=>node_type-array.
       lv_tab_key = 'array_index'. " path + index
     ENDIF.
 
     LOOP AT mr_source_tree->* INTO ls_node USING KEY (lv_tab_key) WHERE path = iv_path.
       CASE ls_node-type.
-        WHEN zif_a2ui5_ajson_types=>node_type-boolean OR zif_a2ui5_ajson_types=>node_type-null
-          OR zif_a2ui5_ajson_types=>node_type-number OR zif_a2ui5_ajson_types=>node_type-string.
+        WHEN z2ui5_if_ajson_types=>node_type-boolean OR z2ui5_if_ajson_types=>node_type-null
+          OR z2ui5_if_ajson_types=>node_type-number OR z2ui5_if_ajson_types=>node_type-string.
 
           IF mi_filter->keep_node( ls_node ) = abap_false.
             CONTINUE.
           ENDIF.
 
-        WHEN zif_a2ui5_ajson_types=>node_type-array OR zif_a2ui5_ajson_types=>node_type-object.
+        WHEN z2ui5_if_ajson_types=>node_type-array OR z2ui5_if_ajson_types=>node_type-object.
 
           IF mi_filter->keep_node(
               is_node  = ls_node
-              iv_visit = zif_a2ui5_ajson_filter=>visit_type-open ) = abap_false.
+              iv_visit = z2ui5_if_ajson_filter=>visit_type-open ) = abap_false.
             CONTINUE.
           ENDIF.
 
@@ -1845,17 +1845,17 @@ CLASS lcl_filter_runner IMPLEMENTATION.
 
           IF mi_filter->keep_node(
               is_node  = ls_node
-              iv_visit = zif_a2ui5_ajson_filter=>visit_type-close ) = abap_false.
+              iv_visit = z2ui5_if_ajson_filter=>visit_type-close ) = abap_false.
             CONTINUE.
           ENDIF.
 
         WHEN OTHERS.
-          zcx_a2ui5_ajson_error=>raise( |Unexpected node type { ls_node-type }| ).
+          z2ui5_cx_ajson_error=>raise( |Unexpected node type { ls_node-type }| ).
       ENDCASE.
 
       IF cs_parent IS SUPPLIED.
         cs_parent-children = cs_parent-children + 1.
-        IF cs_parent-type = zif_a2ui5_ajson_types=>node_type-array.
+        IF cs_parent-type = z2ui5_if_ajson_types=>node_type-array.
           ls_node-name  = |{ cs_parent-children }|.
           ls_node-index = cs_parent-children.
         ENDIF.
@@ -1877,25 +1877,25 @@ CLASS lcl_mapper_runner DEFINITION FINAL.
     INTERFACES lif_mutator_runner.
     CLASS-METHODS new
       IMPORTING
-        ii_mapper TYPE REF TO zif_a2ui5_ajson_mapping
+        ii_mapper TYPE REF TO z2ui5_if_ajson_mapping
       RETURNING
         VALUE(ro_instance) TYPE REF TO lcl_mapper_runner.
     METHODS constructor
       IMPORTING
-        ii_mapper TYPE REF TO zif_a2ui5_ajson_mapping.
+        ii_mapper TYPE REF TO z2ui5_if_ajson_mapping.
 
   PRIVATE SECTION.
-    DATA mi_mapper TYPE REF TO zif_a2ui5_ajson_mapping.
-    DATA mr_source_tree TYPE REF TO zif_a2ui5_ajson_types=>ty_nodes_ts.
-    DATA mr_dest_tree TYPE REF TO zif_a2ui5_ajson_types=>ty_nodes_ts.
+    DATA mi_mapper TYPE REF TO z2ui5_if_ajson_mapping.
+    DATA mr_source_tree TYPE REF TO z2ui5_if_ajson_types=>ty_nodes_ts.
+    DATA mr_dest_tree TYPE REF TO z2ui5_if_ajson_types=>ty_nodes_ts.
 
     METHODS process_deep_node
       IMPORTING
         iv_path         TYPE string
         iv_renamed_path TYPE string
-        iv_node_type    TYPE zif_a2ui5_ajson_types=>ty_node-type
+        iv_node_type    TYPE z2ui5_if_ajson_types=>ty_node-type
       RAISING
-        zcx_a2ui5_ajson_error.
+        z2ui5_cx_ajson_error.
 
 ENDCLASS.
 
@@ -1916,7 +1916,7 @@ CLASS lcl_mapper_runner IMPLEMENTATION.
 
     READ TABLE it_source_tree WITH KEY path = `` name = `` ASSIGNING <root>.
     IF sy-subrc <> 0
-      OR NOT ( <root>-type = zif_a2ui5_ajson_types=>node_type-array OR <root>-type = zif_a2ui5_ajson_types=>node_type-object ).
+      OR NOT ( <root>-type = z2ui5_if_ajson_types=>node_type-array OR <root>-type = z2ui5_if_ajson_types=>node_type-object ).
       " empty or one-value-only tree
       et_dest_tree = it_source_tree.
       RETURN.
@@ -1942,7 +1942,7 @@ CLASS lcl_mapper_runner IMPLEMENTATION.
 
     LOOP AT mr_source_tree->* ASSIGNING <item> WHERE path = iv_path.
       ls_renamed_node = <item>.
-      IF iv_node_type <> zif_a2ui5_ajson_types=>node_type-array.
+      IF iv_node_type <> z2ui5_if_ajson_types=>node_type-array.
         " don't rename array item names -> they are numeric index
         mi_mapper->rename_node(
           EXPORTING
@@ -1950,7 +1950,7 @@ CLASS lcl_mapper_runner IMPLEMENTATION.
           CHANGING
             cv_name = ls_renamed_node-name ).
         IF ls_renamed_node-name IS INITIAL.
-          zcx_a2ui5_ajson_error=>raise(
+          z2ui5_cx_ajson_error=>raise(
             iv_msg  = 'Renamed node name cannot be empty'
             is_node = <item> ).
         ENDIF.
@@ -1959,14 +1959,14 @@ CLASS lcl_mapper_runner IMPLEMENTATION.
 
       INSERT ls_renamed_node INTO TABLE mr_dest_tree->*.
       IF sy-subrc <> 0. " = 4 ?
-        zcx_a2ui5_ajson_error=>raise(
+        z2ui5_cx_ajson_error=>raise(
           iv_msg  = 'Renamed node has a duplicate'
           is_node = ls_renamed_node ).
       ENDIF.
 
       " maybe also catch CX_SY_ITAB_DUPLICATE_KEY but secondary keys are not changed here, so not for now
 
-      IF <item>-type = zif_a2ui5_ajson_types=>node_type-array OR <item>-type = zif_a2ui5_ajson_types=>node_type-object.
+      IF <item>-type = z2ui5_if_ajson_types=>node_type-array OR <item>-type = z2ui5_if_ajson_types=>node_type-object.
         process_deep_node(
           iv_path         = iv_path && <item>-name && `/`
           iv_renamed_path = iv_renamed_path && ls_renamed_node-name && `/`
@@ -2019,7 +2019,7 @@ CLASS lcl_mutator_queue IMPLEMENTATION.
     DATA lv_qsize TYPE i.
     FIELD-SYMBOLS <from> LIKE it_source_tree.
     FIELD-SYMBOLS <to> LIKE it_source_tree.
-    DATA lr_buf TYPE REF TO zif_a2ui5_ajson_types=>ty_nodes_ts.
+    DATA lr_buf TYPE REF TO z2ui5_if_ajson_types=>ty_nodes_ts.
 
     lv_qsize = lines( mt_queue ).
 

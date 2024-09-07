@@ -1,4 +1,4 @@
-CLASS zcl_a2ui5_ajson_utilities DEFINITION
+CLASS z2ui5_cl_ajson_utilities DEFINITION
   PUBLIC
   CREATE PUBLIC .
 
@@ -6,90 +6,90 @@ CLASS zcl_a2ui5_ajson_utilities DEFINITION
 
     CLASS-METHODS new
       RETURNING
-        VALUE(ro_instance) TYPE REF TO zcl_a2ui5_ajson_utilities.
+        VALUE(ro_instance) TYPE REF TO z2ui5_cl_ajson_utilities.
     METHODS diff
       IMPORTING
         !iv_json_a            TYPE string OPTIONAL
         !iv_json_b            TYPE string OPTIONAL
-        !io_json_a            TYPE REF TO zif_a2ui5_ajson OPTIONAL
-        !io_json_b            TYPE REF TO zif_a2ui5_ajson OPTIONAL
+        !io_json_a            TYPE REF TO z2ui5_if_ajson OPTIONAL
+        !io_json_b            TYPE REF TO z2ui5_if_ajson OPTIONAL
         !iv_keep_empty_arrays TYPE abap_bool DEFAULT abap_false
       EXPORTING
-        !eo_insert            TYPE REF TO zif_a2ui5_ajson
-        !eo_delete            TYPE REF TO zif_a2ui5_ajson
-        !eo_change            TYPE REF TO zif_a2ui5_ajson
+        !eo_insert            TYPE REF TO z2ui5_if_ajson
+        !eo_delete            TYPE REF TO z2ui5_if_ajson
+        !eo_change            TYPE REF TO z2ui5_if_ajson
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
     METHODS merge
       IMPORTING
         !iv_json_a            TYPE string OPTIONAL
         !iv_json_b            TYPE string OPTIONAL
-        !io_json_a            TYPE REF TO zif_a2ui5_ajson OPTIONAL
-        !io_json_b            TYPE REF TO zif_a2ui5_ajson OPTIONAL
+        !io_json_a            TYPE REF TO z2ui5_if_ajson OPTIONAL
+        !io_json_b            TYPE REF TO z2ui5_if_ajson OPTIONAL
         !iv_keep_empty_arrays TYPE abap_bool DEFAULT abap_false
       RETURNING
-        VALUE(ro_json)        TYPE REF TO zif_a2ui5_ajson
+        VALUE(ro_json)        TYPE REF TO z2ui5_if_ajson
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
     METHODS sort
       IMPORTING
         !iv_json         TYPE string OPTIONAL
-        !io_json         TYPE REF TO zif_a2ui5_ajson OPTIONAL
+        !io_json         TYPE REF TO z2ui5_if_ajson OPTIONAL
       RETURNING
         VALUE(rv_sorted) TYPE string
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
     METHODS is_equal
       IMPORTING
         !iv_json_a            TYPE string OPTIONAL
         !iv_json_b            TYPE string OPTIONAL
-        !ii_json_a            TYPE REF TO zif_a2ui5_ajson OPTIONAL
-        !ii_json_b            TYPE REF TO zif_a2ui5_ajson OPTIONAL
+        !ii_json_a            TYPE REF TO z2ui5_if_ajson OPTIONAL
+        !ii_json_b            TYPE REF TO z2ui5_if_ajson OPTIONAL
       RETURNING
         VALUE(rv_yes) TYPE abap_bool
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
 
   PROTECTED SECTION.
 
   PRIVATE SECTION.
 
-    DATA mo_json_a TYPE REF TO zif_a2ui5_ajson .
-    DATA mo_json_b TYPE REF TO zif_a2ui5_ajson .
-    DATA mo_insert TYPE REF TO zif_a2ui5_ajson .
-    DATA mo_delete TYPE REF TO zif_a2ui5_ajson .
-    DATA mo_change TYPE REF TO zif_a2ui5_ajson .
+    DATA mo_json_a TYPE REF TO z2ui5_if_ajson .
+    DATA mo_json_b TYPE REF TO z2ui5_if_ajson .
+    DATA mo_insert TYPE REF TO z2ui5_if_ajson .
+    DATA mo_delete TYPE REF TO z2ui5_if_ajson .
+    DATA mo_change TYPE REF TO z2ui5_if_ajson .
 
     METHODS normalize_input
       IMPORTING
         !iv_json       TYPE string OPTIONAL
-        !io_json       TYPE REF TO zif_a2ui5_ajson OPTIONAL
+        !io_json       TYPE REF TO z2ui5_if_ajson OPTIONAL
       RETURNING
-        VALUE(ro_json) TYPE REF TO zif_a2ui5_ajson
+        VALUE(ro_json) TYPE REF TO z2ui5_if_ajson
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
     METHODS diff_a_b
       IMPORTING
         !iv_path TYPE string
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
     METHODS diff_b_a
       IMPORTING
         !iv_path  TYPE string
         !iv_array TYPE abap_bool DEFAULT abap_false
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
     METHODS delete_empty_nodes
       IMPORTING
-        !io_json              TYPE REF TO zif_a2ui5_ajson
+        !io_json              TYPE REF TO z2ui5_if_ajson
         !iv_keep_empty_arrays TYPE abap_bool
       RAISING
-        zcx_a2ui5_ajson_error .
+        z2ui5_cx_ajson_error .
 ENDCLASS.
 
 
 
-CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
+CLASS z2ui5_cl_ajson_utilities IMPLEMENTATION.
 
 
   METHOD delete_empty_nodes.
@@ -102,7 +102,7 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
 
       IF iv_keep_empty_arrays = abap_false.
         LOOP AT io_json->mt_json_tree INTO ls_json_tree
-          WHERE type = zif_a2ui5_ajson_types=>node_type-array AND children = 0.
+          WHERE type = z2ui5_if_ajson_types=>node_type-array AND children = 0.
 
           io_json->delete( ls_json_tree-path && ls_json_tree-name ).
 
@@ -113,7 +113,7 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
       ENDIF.
 
       LOOP AT io_json->mt_json_tree INTO ls_json_tree
-        WHERE type = zif_a2ui5_ajson_types=>node_type-object AND children = 0.
+        WHERE type = z2ui5_if_ajson_types=>node_type-object AND children = 0.
 
         io_json->delete( ls_json_tree-path && ls_json_tree-name ).
 
@@ -140,9 +140,9 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
       iv_json = iv_json_b
       io_json = io_json_b ).
 
-    mo_insert = zcl_a2ui5_ajson=>create_empty( ).
-    mo_delete = zcl_a2ui5_ajson=>create_empty( ).
-    mo_change = zcl_a2ui5_ajson=>create_empty( ).
+    mo_insert = z2ui5_cl_ajson=>create_empty( ).
+    mo_delete = z2ui5_cl_ajson=>create_empty( ).
+    mo_change = z2ui5_cl_ajson=>create_empty( ).
 
     diff_a_b( '/' ).
     diff_b_a( '/' ).
@@ -184,12 +184,12 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
 
         IF <node_a>-type = <node_b>-type.
           CASE <node_a>-type.
-            WHEN zif_a2ui5_ajson_types=>node_type-array.
+            WHEN z2ui5_if_ajson_types=>node_type-array.
               mo_insert->touch_array( lv_path_a ).
               mo_change->touch_array( lv_path_a ).
               mo_delete->touch_array( lv_path_a ).
               diff_a_b( lv_path_a ).
-            WHEN zif_a2ui5_ajson_types=>node_type-object.
+            WHEN z2ui5_if_ajson_types=>node_type-object.
               diff_a_b( lv_path_a ).
             WHEN OTHERS.
               IF <node_a>-value <> <node_b>-value.
@@ -203,10 +203,10 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
         ELSE.
           " save changed type as delete + insert
           CASE <node_a>-type.
-            WHEN zif_a2ui5_ajson_types=>node_type-array.
+            WHEN z2ui5_if_ajson_types=>node_type-array.
               mo_delete->touch_array( lv_path_a ).
               diff_a_b( lv_path_a ).
-            WHEN zif_a2ui5_ajson_types=>node_type-object.
+            WHEN z2ui5_if_ajson_types=>node_type-object.
               diff_a_b( lv_path_a ).
             WHEN OTHERS.
               mo_delete->set(
@@ -215,10 +215,10 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
                 iv_node_type = <node_a>-type ).
           ENDCASE.
           CASE <node_b>-type.
-            WHEN zif_a2ui5_ajson_types=>node_type-array.
+            WHEN z2ui5_if_ajson_types=>node_type-array.
               mo_insert->touch_array( lv_path_b ).
               diff_b_a( lv_path_b ).
-            WHEN zif_a2ui5_ajson_types=>node_type-object.
+            WHEN z2ui5_if_ajson_types=>node_type-object.
               diff_b_a( lv_path_b ).
             WHEN OTHERS.
               mo_insert->set(
@@ -230,10 +230,10 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
       ELSE.
         " save as delete
         CASE <node_a>-type.
-          WHEN zif_a2ui5_ajson_types=>node_type-array.
+          WHEN z2ui5_if_ajson_types=>node_type-array.
             mo_delete->touch_array( lv_path_a ).
             diff_a_b( lv_path_a ).
-          WHEN zif_a2ui5_ajson_types=>node_type-object.
+          WHEN z2ui5_if_ajson_types=>node_type-object.
             diff_a_b( lv_path_a ).
           WHEN OTHERS.
             mo_delete->set(
@@ -257,12 +257,12 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
       lv_path = <node_b>-path && <node_b>-name && '/'.
 
       CASE <node_b>-type.
-        WHEN zif_a2ui5_ajson_types=>node_type-array.
+        WHEN z2ui5_if_ajson_types=>node_type-array.
           mo_insert->touch_array( lv_path ).
           diff_b_a(
             iv_path  = lv_path
             iv_array = abap_true ).
-        WHEN zif_a2ui5_ajson_types=>node_type-object.
+        WHEN z2ui5_if_ajson_types=>node_type-object.
           diff_b_a( lv_path ).
         WHEN OTHERS.
           IF iv_array = abap_false.
@@ -293,9 +293,9 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
 
   METHOD is_equal.
 
-    DATA li_ins TYPE REF TO zif_a2ui5_ajson.
-    DATA li_del TYPE REF TO zif_a2ui5_ajson.
-    DATA li_mod TYPE REF TO zif_a2ui5_ajson.
+    DATA li_ins TYPE REF TO z2ui5_if_ajson.
+    DATA li_del TYPE REF TO z2ui5_if_ajson.
+    DATA li_mod TYPE REF TO z2ui5_if_ajson.
 
     diff(
       EXPORTING
@@ -349,15 +349,15 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
   METHOD normalize_input.
 
     IF boolc( iv_json IS INITIAL ) = boolc( io_json IS INITIAL ).
-      zcx_a2ui5_ajson_error=>raise( 'Either supply JSON string or instance, but not both' ).
+      z2ui5_cx_ajson_error=>raise( 'Either supply JSON string or instance, but not both' ).
     ENDIF.
 
     IF iv_json IS NOT INITIAL.
-      ro_json = zcl_a2ui5_ajson=>parse( iv_json ).
+      ro_json = z2ui5_cl_ajson=>parse( iv_json ).
     ELSEIF io_json IS NOT INITIAL.
       ro_json = io_json.
     ELSE.
-      zcx_a2ui5_ajson_error=>raise( 'Supply either JSON string or instance' ).
+      z2ui5_cx_ajson_error=>raise( 'Supply either JSON string or instance' ).
     ENDIF.
 
   ENDMETHOD.
@@ -365,7 +365,7 @@ CLASS zcl_a2ui5_ajson_utilities IMPLEMENTATION.
 
   METHOD sort.
 
-    DATA lo_json TYPE REF TO zif_a2ui5_ajson.
+    DATA lo_json TYPE REF TO z2ui5_if_ajson.
 
     lo_json = normalize_input(
       iv_json = iv_json

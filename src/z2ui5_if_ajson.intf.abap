@@ -1,4 +1,4 @@
-INTERFACE zif_a2ui5_ajson
+INTERFACE z2ui5_if_ajson
   PUBLIC.
 
   CONSTANTS version TYPE string VALUE 'v1.1.10'. "#EC NOTEXT
@@ -15,46 +15,46 @@ INTERFACE zif_a2ui5_ajson
 
   " DATA
 
-  DATA mt_json_tree TYPE zif_a2ui5_ajson_types=>ty_nodes_ts READ-ONLY.
+  DATA mt_json_tree TYPE z2ui5_if_ajson_types=>ty_nodes_ts READ-ONLY.
 
   " CLONING
 
   METHODS clone
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
   METHODS filter
     IMPORTING
-      ii_filter TYPE REF TO zif_a2ui5_ajson_filter
+      ii_filter TYPE REF TO z2ui5_if_ajson_filter
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
   METHODS map
     IMPORTING
-      ii_mapper TYPE REF TO zif_a2ui5_ajson_mapping
+      ii_mapper TYPE REF TO z2ui5_if_ajson_mapping
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   " METHODS
 
   METHODS freeze.
   METHODS keep_item_order
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson.
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson.
   METHODS format_datetime
     IMPORTING
       iv_use_iso TYPE abap_bool DEFAULT abap_true
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson.
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson.
   METHODS to_abap_corresponding_only
     IMPORTING
       iv_enable TYPE abap_bool DEFAULT abap_true
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson.
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson.
   METHODS opts
     RETURNING
       VALUE(rs_opts) TYPE ty_opts.
@@ -87,7 +87,7 @@ INTERFACE zif_a2ui5_ajson
     IMPORTING
       iv_path TYPE string
     RETURNING
-      VALUE(rv_node_type) TYPE zif_a2ui5_ajson_types=>ty_node_type.
+      VALUE(rv_node_type) TYPE z2ui5_if_ajson_types=>ty_node_type.
 
   METHODS get_boolean
     IMPORTING
@@ -129,7 +129,7 @@ INTERFACE zif_a2ui5_ajson
     IMPORTING
       iv_path TYPE string
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson.
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson.
 
   METHODS to_abap
     IMPORTING
@@ -137,7 +137,7 @@ INTERFACE zif_a2ui5_ajson
     EXPORTING
       ev_container TYPE any
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS array_to_string_table
     IMPORTING
@@ -145,111 +145,111 @@ INTERFACE zif_a2ui5_ajson
     RETURNING
       VALUE(rt_string_table) TYPE string_table
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   " METHODS ex.writer
 
   METHODS clear
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS set
     IMPORTING
       iv_path TYPE string
       iv_val TYPE any
       iv_ignore_empty TYPE abap_bool DEFAULT abap_true
-      iv_node_type TYPE zif_a2ui5_ajson_types=>ty_node_type OPTIONAL
+      iv_node_type TYPE z2ui5_if_ajson_types=>ty_node_type OPTIONAL
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS setx
     IMPORTING
       iv_param TYPE string
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS set_boolean
     IMPORTING
       iv_path TYPE string
       iv_val TYPE any
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS set_string
     IMPORTING
       iv_path TYPE string
       iv_val TYPE clike
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS set_integer
     IMPORTING
       iv_path TYPE string
       iv_val TYPE i
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS set_date
     IMPORTING
       iv_path TYPE string
       iv_val TYPE d
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS set_timestamp
     IMPORTING
       iv_path TYPE string
       iv_val TYPE timestamp
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS set_null
     IMPORTING
       iv_path TYPE string
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS delete
     IMPORTING
       iv_path TYPE string
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS touch_array
     IMPORTING
       iv_path TYPE string
       iv_clear TYPE abap_bool DEFAULT abap_false
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS push
     IMPORTING
       iv_path TYPE string
       iv_val TYPE any
     RETURNING
-      VALUE(ri_json) TYPE REF TO zif_a2ui5_ajson
+      VALUE(ri_json) TYPE REF TO z2ui5_if_ajson
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
   METHODS stringify
     IMPORTING
@@ -257,6 +257,6 @@ INTERFACE zif_a2ui5_ajson
     RETURNING
       VALUE(rv_json) TYPE string
     RAISING
-      zcx_a2ui5_ajson_error.
+      z2ui5_cx_ajson_error.
 
 ENDINTERFACE.
