@@ -20,12 +20,12 @@
       {
         "type": "CLAS|INTF",
         "oldName": "ZCL_AJSON_REF_INITIALIZER_LIB",
-        "newName": "Z2UI5_CL_AJSON_REF_INIT_LIB"
+        "newName": "Z2UI5_CL_AJSON_REFINITLIB"
       },
       {
         "type": "CLAS|INTF",
         "oldName": "ZIF_AJSON_REF_INITIALIZER",
-        "newName": "Z2UI5_IF_AJSON_REF_INIT"
+        "newName": "Z2UI5_IF_AJSON_REFINIT"
       },
       {
         "type": "CLAS|INTF",
