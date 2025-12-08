@@ -16,7 +16,23 @@
   ],
   "rename": {
     "output": "output",
-    "patterns": [{"type": "CLAS|INTF", "oldName": "ZCL_AJSON_REF_INITIALIZER_LIB", "newName": "Z2UI5_CL_AJSON_REF_INIT_LIB"},{"type": "CLAS|INTF", "oldName": "z(.*)_ajson", "newName": "z2ui5_$1_ajson"}]
+    "patterns": [
+      {
+        "type": "CLAS|INTF",
+        "oldName": "ZCL_AJSON_REF_INITIALIZER_LIB",
+        "newName": "Z2UI5_CL_AJSON_REF_INIT_LIB"
+      },
+      {
+        "type": "CLAS|INTF",
+        "oldName": "ZIF_AJSON_REF_INITIALIZER",
+        "newName": "Z2UI5_IF_AJSON_REF_INIT"
+      },
+      {
+        "type": "CLAS|INTF",
+        "oldName": "z(.*)_ajson",
+        "newName": "z2ui5_$1_ajson"
+      }
+    ]
   },
   "syntax": {
     "version": "v702",
