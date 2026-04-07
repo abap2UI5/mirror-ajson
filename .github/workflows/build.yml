@@ -20,12 +20,7 @@ jobs:
       run: |
         npm ci
         npm run mirror
-        python3 -c "
-f = 'src/z2ui5_if_ajson_mapping.intf.abap'
-content = open(f).read()
-content = content.replace('  PUBLIC.\n\n', '  PUBLIC.\n\n  INTERFACES if_serializable_object.\n\n', 1)
-open(f, 'w').write(content)
-"
+        sed -i 's/  PUBLIC\./  PUBLIC.\n\n  INTERFACES if_serializable_object./' src/z2ui5_if_ajson_mapping.intf.abap
         git status
     - name: Create Pull Request
       id: cpr
