@@ -5,17 +5,21 @@ on:
   schedule:
     - cron: '0 0 * * 1'
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '20'
     - name: run
       run: |
         npm ci
@@ -24,7 +28,7 @@ jobs:
         git status
     - name: Create Pull Request
       id: cpr
-      uses: peter-evans/create-pull-request@v5
+      uses: peter-evans/create-pull-request@v7
       with:
         branch: auto-update
         title: "Automatic Update"
@@ -32,7 +36,8 @@ jobs:
         body: "This PR contains automated changes."
         labels: "auto-merge"
     - name: Enable Pull Request Automerge
+      if: steps.cpr.outputs.pull-request-created == 'true'
       uses: peter-evans/enable-pull-request-automerge@v3
       with:
         pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-        merge-method: squash  
+        merge-method: squash
