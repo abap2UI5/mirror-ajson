@@ -15,11 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Use Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       with:
-        node-version: '20'
+        node-version: '22'
     - name: run
       run: |
         npm ci
@@ -28,7 +28,7 @@ jobs:
         git status
     - name: Create Pull Request
       id: cpr
-      uses: peter-evans/create-pull-request@v7
+      uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
       with:
         branch: auto-update
         title: "Automatic Update"
@@ -37,7 +37,7 @@ jobs:
         labels: "auto-merge"
     - name: Enable Pull Request Automerge
       if: steps.cpr.outputs.pull-request-created == 'true'
-      uses: peter-evans/enable-pull-request-automerge@v3
+      uses: peter-evans/enable-pull-request-automerge@a660677d5469627102a1c1e11409dd063606628d # v3.0.0
       with:
         pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
         merge-method: squash
