@@ -35,8 +35,17 @@ jobs:
         commit-message: "Automated changes"
         body: "This PR contains automated changes."
         labels: "auto-merge"
+    # Auto-merge of the upstream code is a deliberate choice: this repository
+    # is a renamed copy of sbcgua/ajson and nothing else, abap2UI5 reviews the
+    # copy again when its own mirror workflow pulls it into src/00/01, and an
+    # update that waits here for a human review simply never arrives.
+    # create-pull-request v8 reports what it did as pull-request-operation
+    # (created, updated or closed) - it has no pull-request-created output, so
+    # the condition this step used to test was never true and auto-merge was
+    # never switched on. Only a newly created pull request needs it: an
+    # updated one already carries it from the run that created it.
     - name: Enable Pull Request Automerge
-      if: steps.cpr.outputs.pull-request-created == 'true'
+      if: steps.cpr.outputs.pull-request-operation == 'created'
       uses: peter-evans/enable-pull-request-automerge@a660677d5469627102a1c1e11409dd063606628d # v3.0.0
       with:
         pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
