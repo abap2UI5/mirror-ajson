@@ -24,7 +24,6 @@ jobs:
       run: |
         npm ci
         npm run mirror
-        sed -i 's/  PUBLIC\./  PUBLIC.\n\n  INTERFACES if_serializable_object./' src/z2ui5_if_ajson_mapping.intf.abap
         git status
     - name: Create Pull Request
       id: cpr
