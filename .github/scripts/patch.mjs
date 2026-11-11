@@ -58,6 +58,17 @@ const patches = [
       `            RETURN.\n` +
       `        ENDTRY.\n`,
   },
+  {
+    // Extended check: "Number of fields of the message 001 specified using
+    // WITH for the message class 00: 4. Number of placeholders in this
+    // message: 8". Message 00/001 is SAP's generic "&1&2&3&4&5&6&7&8" and the
+    // T100 key fills four of them on purpose - the pragma is the one the
+    // check itself names. It sits on the msgid line, where the finding is
+    // reported: each part of the chained CONSTANTS is a statement of its own.
+    file: "src/z2ui5_cx_ajson_error.clas.abap",
+    find: `      msgid type symsgid value '00',\n`,
+    replace: `      msgid type symsgid value '00' ##MG_MISSING,\n`,
+  },
 ];
 
 let failed = false;
